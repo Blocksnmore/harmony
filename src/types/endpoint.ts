@@ -175,6 +175,8 @@ const TEAM_ICON = (teamID: string, iconID: string): string =>
   `${Constants.DISCORD_CDN_URL}/team-icons/${teamID}/${iconID}`
 const ROLE_ICON = (roleID: string, iconID: string): string =>
   `${Constants.DISCORD_CDN_URL}/role-icons/${roleID}/${iconID}`
+const EVENT_COVER = (eventID: string, coverHASH: string): string =>
+  `${Constants.DISCORD_CDN_URL}/guild-events/${eventID}/${coverHASH}`
 
 // Emoji Endpoints
 const EMOJI = (guildID: string, emojiID: string): string =>
@@ -217,6 +219,13 @@ const WEBHOOK_MESSAGE = (id: string, token: string, msgID: string): string =>
 
 const INTERACTION_CALLBACK = (id: string, token: string): string =>
   `${Constants.DISCORD_API_URL}/v${Constants.DISCORD_API_VERSION}/interactions/${id}/${token}/callback`
+
+// Event Endpoints
+const EVENT = (eventID: string): string =>
+  `${Constants.DISCORD_API_URL}/v${Constants.DISCORD_API_VERSION}/guild-events/${eventID}`
+
+const EVENT_USERS = (eventID: string): string =>
+  `${Constants.DISCORD_API_URL}/v${Constants.DISCORD_API_VERSION}/guild-events/${eventID}/users`
 
 export {
   INTERACTION_CALLBACK,
@@ -294,8 +303,11 @@ export {
   ACHIEVEMENT_ICON,
   TEAM_ICON,
   ROLE_ICON,
+  EVENT_COVER,
   EMOJI,
   TEMPLATE,
   INVITE,
-  VOICE_REGIONS
+  VOICE_REGIONS,
+  EVENT,
+  EVENT_USERS
 }
