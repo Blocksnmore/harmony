@@ -7,7 +7,7 @@ import { Embed } from './embed.ts'
 import { Message, MessageAttachment } from './message.ts'
 import type { TextChannel } from './textChannel.ts'
 import { User } from './user.ts'
-import { fetchAuto } from '../../deps.ts'
+import { fetchAuto } from '../utils/fetchBase64.ts'
 import { WEBHOOK_MESSAGE, CHANNEL_WEBHOOKS } from '../types/endpoint.ts'
 import { Constants } from '../types/constants.ts'
 
@@ -204,10 +204,10 @@ export class Webhook {
       }
     }
   ): Promise<Webhook> {
-    await this.client?.rest.patch(
+    await this.rest.patch(
       WEBHOOK_MESSAGE(
         this.id,
-        (this.token ?? this.client.token) as string,
+        (this.token ?? this.client?.token) as string,
         typeof message === 'string' ? message : message.id
       ),
       data
@@ -216,10 +216,10 @@ export class Webhook {
   }
 
   async deleteMessage(message: string | Message): Promise<Webhook> {
-    await this.client?.rest.delete(
+    await this.rest.delete(
       WEBHOOK_MESSAGE(
         this.id,
-        (this.token ?? this.client.token) as string,
+        (this.token ?? this.client?.token) as string,
         typeof message === 'string' ? message : message.id
       )
     )

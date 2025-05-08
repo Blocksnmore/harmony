@@ -6,17 +6,18 @@
 # This workflow will install Deno and run tests across stable and nightly builds on Windows, Ubuntu and macOS.
 # For more information see: https://github.com/denolib/setup-deno
 
-name: Run in Deno
+name: Publish to JSR
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  release:
+    types: [released]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
     strategy:
       matrix:
@@ -31,8 +32,5 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }} # tests across multiple Deno versions
 
-      - name: Check
-        run: deno run --allow-read mod.ts
-
-      - name: Check Deploy
-        run: deno run --allow-read deploy.ts
+      - name: Publish to JSR
+        run: deno publish --allow-dirty
