@@ -3,7 +3,7 @@ import type { Guild } from '../structures/guild.ts'
 import { Presence } from '../structures/presence.ts'
 import { User } from '../structures/user.ts'
 import type { PresenceUpdatePayload } from '../types/gateway.ts'
-import { UserPayload } from '../types/user.ts'
+import type { UserPayload } from '../types/user.ts'
 import { BaseManager } from './base.ts'
 
 export class GuildPresencesManager extends BaseManager<

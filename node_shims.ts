@@ -6,8 +6,7 @@ export class ErrorEvent extends Event {
   #filename: string
   #lineno: number
   #colno: number
-  // deno-lint-ignore no-explicit-any
-  #error: any
+  #error: unknown
 
   get message(): string {
     return this.#message
@@ -21,8 +20,7 @@ export class ErrorEvent extends Event {
   get colno(): number {
     return this.#colno
   }
-  // deno-lint-ignore no-explicit-any
-  get error(): any {
+  get error(): unknown {
     return this.#error
   }
 

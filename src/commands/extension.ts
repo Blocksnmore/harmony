@@ -1,11 +1,14 @@
 import { Collection } from '../utils/collection.ts'
 import { Command } from './command.ts'
-import { CommandClient } from './client.ts'
+import type { CommandClient } from './client.ts'
 import type { ClientEvents } from '../gateway/handlers/mod.ts'
 import { join, walk } from '../../deps.ts'
 
 // Breaking change if we change to unknown
-export type ExtensionEventCallback = (ext: Extension, ...args: any[]) => any
+export type ExtensionEventCallback = (
+  ext: Extension,
+  ...args: unknown[]
+) => unknown
 
 /** Extension Commands Manager */
 export class ExtensionCommands {
@@ -77,9 +80,12 @@ export class Extension {
 
   constructor(client: CommandClient) {
     this.client = client
-    const self = this as any
+    const self = this as Extension & {
+      _decoratedCommands?: Command[]
+      _decoratedEvents?: { [name: string]: () => void }
+    }
     if (self._decoratedCommands !== undefined) {
-      Object.entries(self._decoratedCommands).forEach((entry: any) => {
+      Object.entries(self._decoratedCommands).forEach((entry) => {
         entry[1].extension = this
         this.commands.add(entry[1])
       })
@@ -90,7 +96,7 @@ export class Extension {
       self._decoratedEvents !== undefined &&
       Object.keys(self._decoratedEvents).length !== 0
     ) {
-      Object.entries(self._decoratedEvents).forEach((entry: any) => {
+      Object.entries(self._decoratedEvents).forEach((entry) => {
         this.listen(entry[0] as keyof ClientEvents, entry[1].bind(this))
       })
       self._decoratedEvents = undefined
@@ -101,8 +107,7 @@ export class Extension {
   listen(event: keyof ClientEvents, cb: ExtensionEventCallback): boolean {
     if (this.events[event] !== undefined) return false
     else {
-      const fn = (...args: any[]): void => {
-        // eslint-disable-next-line n/no-callback-literal
+      const fn = (...args: unknown[]): void => {
         cb(this, ...args)
       }
       this.client.on(event, fn)
@@ -113,13 +118,11 @@ export class Extension {
 
   /** Method called upon loading of an Extension */
   load(): unknown | Promise<unknown> {
-    // eslint-disable-next-line no-useless-return
     return
   }
 
   /** Method called upon unloading of an Extension */
   unload(): unknown | Promise<unknown> {
-    // eslint-disable-next-line no-useless-return
     return
   }
 }
@@ -145,7 +148,6 @@ export class ExtensionsManager {
 
   /** Loads an Extension onto Command Client */
   load(ext: Extension | typeof Extension): void {
-    // eslint-disable-next-line new-cap
     if (!(ext instanceof Extension)) ext = new ext(this.client)
     if (this.exists(ext.name))
       throw new Error(`Extension with name '${ext.name}' already exists`)
@@ -178,14 +180,9 @@ export class ExtensionsManager {
       includeDirs: false
     })) {
       if (entry.isFile !== true) continue
-      const ext = (
-        await import(
-          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-          'file:///' +
-            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-            join(Deno.cwd(), entry.path)
-        )
-      )[options?.exportName ?? 'default']
+      const ext = (await import('file:///' + join(Deno.cwd(), entry.path)))[
+        options?.exportName ?? 'default'
+      ]
 
       extensions.push(ext)
       if (options?.onlyRead !== true) this.load(ext)
@@ -202,7 +199,6 @@ export class ExtensionsManager {
     extension.commands.deleteAll()
     for (const [k, v] of Object.entries(extension.events)) {
       this.client.off(k as keyof ClientEvents, v)
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete extension.events[k]
     }
     extension.unload()

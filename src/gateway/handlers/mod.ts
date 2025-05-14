@@ -32,7 +32,7 @@ import { messageDeleteBulk } from './messageDeleteBulk.ts'
 import { userUpdate } from './userUpdate.ts'
 import { typingStart } from './typingStart.ts'
 import type { TextChannel } from '../../structures/textChannel.ts'
-import { GuildTextBasedChannel } from '../../structures/guildTextChannel.ts'
+import type { GuildTextBasedChannel } from '../../structures/guildTextChannel.ts'
 import type { Guild } from '../../structures/guild.ts'
 import type { User } from '../../structures/user.ts'
 import type { Emoji } from '../../structures/emoji.ts'
@@ -75,9 +75,9 @@ import { threadMembersUpdate } from './threadMembersUpdate.ts'
 import { threadMemberUpdate } from './threadMemberUpdate.ts'
 import { threadListSync } from './threadListSync.ts'
 import { guildStickersUpdate } from './guildStickersUpdate.ts'
-import { MessageSticker } from '../../structures/messageSticker.ts'
+import type { MessageSticker } from '../../structures/messageSticker.ts'
 import { guildAuditLogEntryCreate } from './guildAuditLogEntryCreate.ts'
-import { CommandCooldownType } from '../../commands/client.ts'
+import type { CommandCooldownType } from '../../commands/client.ts'
 
 export const gatewayHandlers: {
   [eventCode in GatewayEvents]: GatewayEventHandler | undefined
@@ -137,7 +137,6 @@ export interface VoiceServerUpdateData {
 }
 
 /** All Client Events */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type ClientEvents = {
   /** When Client has successfully connected to Discord */
   ready: [shards: number]
@@ -408,7 +407,7 @@ export type ClientEvents = {
    * @param evt Event name string
    * @param payload Payload JSON of the event
    */
-  raw: [evt: string, payload: any, shard: number]
+  raw: [evt: string, payload: unknown, shard: number]
 
   /**
    * An uncached Message was deleted.

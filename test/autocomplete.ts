@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Client } from '../mod.ts'
 import { TOKEN } from './config.ts'
 
@@ -6,7 +5,7 @@ const FILE = new URL('./pokemon.json', import.meta.url)
 
 try {
   await Deno.lstat(FILE)
-} catch (e) {
+} catch {
   await Deno.writeFile(
     FILE,
     await fetch(
@@ -28,7 +27,7 @@ const client = new Client({
 const clean = (x: string): string => x.replaceAll(/^[a-zA-Z0-9]/g, '')
 
 client.interactions.autocomplete('choose', 'pokemon', (d) => {
-  const value = clean(d.focusedOption.value ?? '')
+  const value = clean((d.focusedOption.value as string) ?? '')
 
   return d.autocomplete(
     names

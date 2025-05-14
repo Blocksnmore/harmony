@@ -1,5 +1,5 @@
 import type { Client } from '../client/client.ts'
-import {
+import type {
   ThreadChannelPayload,
   ThreadMemberPayload,
   ThreadMetadataPayload
@@ -63,16 +63,16 @@ export class ThreadResolvable
   extends SnowflakeBase
   implements IResolvable<ThreadChannel>
 {
-  constructor(client: Client, public id: string) {
+  constructor(client: Client, public override id: string) {
     super(client)
   }
 
   async get(): Promise<ThreadChannel | undefined> {
-    return this.client.channels.get<ThreadChannel>(this.id)
+    return await this.client.channels.get<ThreadChannel>(this.id)
   }
 
   async fetch(): Promise<ThreadChannel> {
-    return this.client.channels.fetch<ThreadChannel>(this.id)
+    return await this.client.channels.fetch<ThreadChannel>(this.id)
   }
 
   async resolve(): Promise<ThreadChannel | undefined> {
@@ -113,14 +113,14 @@ export class ThreadChannel extends GuildTextBasedChannel {
     this.appliedTags = data.applied_tags ?? this.appliedTags
   }
 
-  readFromData(data: ThreadChannelPayload): this {
+  override readFromData(data: ThreadChannelPayload): this {
     super.readFromData(data)
     this._readFromData(data)
     return this
   }
 
   /** Edit the Guild Thread Channel */
-  async edit(options: {
+  override async edit(options: {
     slowmode?: number
     name?: string
     autoArchiveDuration?: number
@@ -137,7 +137,7 @@ export class ThreadChannel extends GuildTextBasedChannel {
 
     const resp = await this.client.rest.api.channels[this.id].patch(body)
 
-    this.readFromData(resp)
+    this.readFromData(resp as ThreadChannelPayload)
     return this
   }
 
@@ -179,6 +179,6 @@ export class ThreadChannel extends GuildTextBasedChannel {
 
   /** Not possible to set Thread Channel topic */
   async setTopic(): Promise<this> {
-    throw new Error('Not possible to set Thread Channel topic')
+    throw await new Error('Not possible to set Thread Channel topic')
   }
 }

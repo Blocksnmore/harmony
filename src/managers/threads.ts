@@ -1,12 +1,13 @@
 import type { Client } from '../client/mod.ts'
 import {
   ChannelTypes,
-  ThreadChannelPayload,
-  ThreadMemberPayload
+  type ThreadChannelPayload,
+  type ThreadMemberPayload
 } from '../types/channel.ts'
-import { ThreadChannel } from '../structures/threadChannel.ts'
+import type { ThreadChannel } from '../structures/threadChannel.ts'
 import { BaseChildManager } from './baseChild.ts'
-import { GuildChannelsManager } from './guildChannels.ts'
+import type { GuildChannelsManager } from './guildChannels.ts'
+import type { BaseManager } from './base.ts'
 
 export const ThreadTypes = [
   ChannelTypes.NEWS_THREAD,
@@ -21,10 +22,13 @@ export class ThreadsManager extends BaseChildManager<
   constructor(client: Client, parent: GuildChannelsManager) {
     // it's not assignable but we're making sure it returns correct type
     // so i had to make ts to shut up
-    super(client, parent as any)
+    super(
+      client,
+      parent as unknown as BaseManager<ThreadChannelPayload, ThreadChannel>
+    )
   }
 
-  async set(
+  override async set(
     id: string,
     data: ThreadChannelPayload & { members?: ThreadMemberPayload[] }
   ): Promise<void> {
@@ -37,13 +41,13 @@ export class ThreadsManager extends BaseChildManager<
     await super.set(id, data)
   }
 
-  async get(id: string): Promise<ThreadChannel | undefined> {
+  override async get(id: string): Promise<ThreadChannel | undefined> {
     const res = await this.parent.get(id)
     if (res === undefined || !ThreadTypes.includes(res.type)) return undefined
     else return res
   }
 
-  async array(): Promise<ThreadChannel[]> {
+  override async array(): Promise<ThreadChannel[]> {
     const arr = await this.parent.array()
     return arr.filter((e) => ThreadTypes.includes(e.type))
   }

@@ -1,5 +1,5 @@
 import { SnowflakeBase } from './base.ts'
-import {
+import type {
   Attachment,
   MessageActivity,
   MessageApplication,
@@ -25,15 +25,15 @@ import { MessageStickerItem } from './messageSticker.ts'
 import type { Emoji } from './emoji.ts'
 import type { InteractionType } from '../types/interactions.ts'
 import { encodeText } from '../utils/encoding.ts'
-import { MessageComponentData } from '../types/messageComponents.ts'
+import type { MessageComponentData } from '../types/messageComponents.ts'
 import { transformComponentPayload } from '../utils/components.ts'
 import type { ThreadChannel } from './threadChannel.ts'
-import { CreateThreadOptions } from './guildThreadAvailableChannel.ts'
+import type { CreateThreadOptions } from './guildThreadAvailableChannel.ts'
 
 type AllMessageOptions = MessageOptions | Embed
 
 export class MessageInteraction extends SnowflakeBase {
-  id: string
+  override id: string
   name: string
   type: InteractionType
   user: User
@@ -48,7 +48,7 @@ export class MessageInteraction extends SnowflakeBase {
 }
 
 export class Message extends SnowflakeBase {
-  id: string
+  override id: string
   channelID!: string
   channel!: TextChannel
   guildID?: string
@@ -180,7 +180,7 @@ export class Message extends SnowflakeBase {
     ) {
       throw new Error("Cannot edit other users' messages")
     }
-    return this.channel.editMessage(this.id, content, option)
+    return await this.channel.editMessage(this.id, content, option)
   }
 
   /** Creates a Reply to this Message. */
@@ -188,12 +188,12 @@ export class Message extends SnowflakeBase {
     content?: string | AllMessageOptions,
     option?: AllMessageOptions
   ): Promise<Message> {
-    return this.channel.send(content, option, this)
+    return await this.channel.send(content, option, this)
   }
 
   /** Deletes the Message. */
   async delete(): Promise<void> {
-    return this.client.rest.delete(CHANNEL_MESSAGE(this.channelID, this.id))
+    await this.client.rest.delete(CHANNEL_MESSAGE(this.channelID, this.id))
   }
 
   /**
@@ -201,7 +201,7 @@ export class Message extends SnowflakeBase {
    * @param emoji Emoji in string or object
    */
   async addReaction(emoji: string | Emoji): Promise<void> {
-    return this.channel.addReaction(this, emoji)
+    return await this.channel.addReaction(this, emoji)
   }
 
   /**
@@ -213,22 +213,22 @@ export class Message extends SnowflakeBase {
     emoji: string | Emoji,
     user?: User | Member | string
   ): Promise<void> {
-    return this.channel.removeReaction(this, emoji, user)
+    return await this.channel.removeReaction(this, emoji, user)
   }
 
   async startThread(options: CreateThreadOptions): Promise<ThreadChannel> {
     if (this.channel.isGuildText() === true) {
       const chan = this.channel as unknown as GuildTextChannel
-      return chan.startThread(options, this)
+      return await chan.startThread(options, this)
     } else throw new Error('Threads can only be made in Guild Text Channels')
   }
 
   async pinMessage(): Promise<void> {
-    return this.client.channels.pinMessage(this.channel, this)
+    return await this.client.channels.pinMessage(this.channel, this)
   }
 
   async unpinMessage(): Promise<void> {
-    return this.client.channels.unpinMessage(this.channel, this)
+    return await this.client.channels.unpinMessage(this.channel, this)
   }
 }
 

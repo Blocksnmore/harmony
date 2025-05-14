@@ -2,10 +2,10 @@ import {
   Command,
   CommandClient,
   Intents,
-  CommandContext,
+  type CommandContext,
   Extension,
-  GuildChannels,
-  Invite
+  type GuildChannels,
+  type Invite
 } from '../mod.ts'
 import { TOKEN } from './config.ts'
 
@@ -76,17 +76,17 @@ client.on('inviteDeleteUncached', (invite) => {
 client.on('commandError', console.error)
 
 class ChannelLog extends Extension {
-  onChannelCreate(ext: Extension, channel: GuildChannels): void {
+  onChannelCreate(_ext: Extension, channel: GuildChannels): void {
     console.log(`Channel Created: ${channel.name}`)
   }
 
-  load(): void {
+  override load(): void {
     this.listen('channelCreate', this.onChannelCreate)
 
     class Pong extends Command {
-      name = 'Pong'
+      override name = 'Pong'
 
-      execute(ctx: CommandContext): void {
+      override execute(ctx: CommandContext): void {
         ctx.message.reply('Ping!')
       }
     }
@@ -97,7 +97,7 @@ class ChannelLog extends Extension {
 
 client.extensions.load(ChannelLog)
 
-client.on('messageDeleteBulk', (channel, messages, uncached) => {
+client.on('messageDeleteBulk', (_channel, messages, uncached) => {
   console.log(
     `=== Message Delete Bulk ===\nMessages: ${messages
       .map((m) => m.id)
@@ -143,7 +143,6 @@ const files = Deno.readDirSync('cmds')
 
 for (const file of files) {
   const module = await import(`./cmds/${file.name}`)
-  // eslint-disable-next-line new-cap
   const cmd = new module.default()
   client.commands.add(cmd)
   console.log(`Loaded command ${cmd.name}!`)

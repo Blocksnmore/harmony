@@ -6,8 +6,6 @@ const client = new harmony.Client({
   intents: ['GUILDS']
 })
 
-client.on('interactionCreate', (d) => {})
-
 client.interactions.handle(
   'View Embeds JSON',
   (d) => {
@@ -25,7 +23,6 @@ client.interactions.handle(
     const user = d.targetUser!
     return d.reply(
       `\`\`\`json\n${JSON.stringify(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
         d.data.resolved?.users?.[user.id]!,
         null,
         2

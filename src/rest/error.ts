@@ -1,5 +1,5 @@
 import { simplifyAPIError } from '../utils/err_fmt.ts'
-import { DiscordAPIErrorPayload } from './types.ts'
+import type { DiscordAPIErrorPayload } from './types.ts'
 
 export class DiscordAPIError extends Error {
   name = 'DiscordAPIError'

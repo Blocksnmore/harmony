@@ -31,21 +31,21 @@ export class ChannelThreadsManager extends BaseChildManager<
     this.channel = channel
   }
 
-  async get(id: string): Promise<ThreadChannel | undefined> {
+  override async get(id: string): Promise<ThreadChannel | undefined> {
     const res = await this.parent.get(id)
     if (res !== undefined && res.parentID === this.channel.id) return res
     else return undefined
   }
 
   /** Delete a Thread Channel */
-  async delete(id: string | ThreadChannel): Promise<boolean> {
+  override async delete(id: string | ThreadChannel): Promise<boolean> {
     const v = typeof id === 'string' ? id : id.id
     if ((await this.get(v))?.parentID !== this.channel.id) return false
     await this.parent.delete(typeof id === 'string' ? id : id.id)
     return true
   }
 
-  async array(): Promise<ThreadChannel[]> {
+  override async array(): Promise<ThreadChannel[]> {
     const arr = await this.parent.array()
     return arr.filter((c) => c.parentID === this.channel.id)
   }
@@ -62,11 +62,11 @@ export class ChannelThreadsManager extends BaseChildManager<
     options: CreateThreadOptions,
     message?: string | Message
   ): Promise<ThreadChannel> {
-    return this.channel.startThread(options, message)
+    return await this.channel.startThread(options, message)
   }
 
   async startPrivate(options: CreateThreadOptions): Promise<ThreadChannel> {
-    return this.channel.startPrivateThread(options)
+    return await this.channel.startPrivateThread(options)
   }
 
   async fetchArchived(
@@ -77,7 +77,7 @@ export class ChannelThreadsManager extends BaseChildManager<
     members: ThreadMember[]
     hasMore: boolean
   }> {
-    return this.channel.fetchArchivedThreads(type, params)
+    return await this.channel.fetchArchivedThreads(type, params)
   }
 
   async fetchPublicArchived(
@@ -87,7 +87,7 @@ export class ChannelThreadsManager extends BaseChildManager<
     members: ThreadMember[]
     hasMore: boolean
   }> {
-    return this.channel.fetchPublicArchivedThreads(params)
+    return await this.channel.fetchPublicArchivedThreads(params)
   }
 
   async fetchPrivateArchived(
@@ -97,7 +97,7 @@ export class ChannelThreadsManager extends BaseChildManager<
     members: ThreadMember[]
     hasMore: boolean
   }> {
-    return this.channel.fetchPrivateArchivedThreads(params)
+    return await this.channel.fetchPrivateArchivedThreads(params)
   }
 
   async fetchJoinedPrivateArchived(
@@ -107,6 +107,6 @@ export class ChannelThreadsManager extends BaseChildManager<
     members: ThreadMember[]
     hasMore: boolean
   }> {
-    return this.channel.fetchJoinedPrivateArchivedThreads(params)
+    return await this.channel.fetchJoinedPrivateArchivedThreads(params)
   }
 }

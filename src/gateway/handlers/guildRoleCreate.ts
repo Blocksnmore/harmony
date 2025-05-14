@@ -1,7 +1,7 @@
 import type { Gateway, GatewayEventHandler } from '../mod.ts'
-import { Guild } from '../../structures/guild.ts'
-import { GuildRoleCreatePayload } from '../../types/gateway.ts'
-import { Role } from '../../structures/role.ts'
+import type { Guild } from '../../structures/guild.ts'
+import type { GuildRoleCreatePayload } from '../../types/gateway.ts'
+import type { Role } from '../../structures/role.ts'
 
 export const guildRoleCreate: GatewayEventHandler = async (
   gateway: Gateway,

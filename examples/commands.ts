@@ -1,7 +1,7 @@
 import {
   CommandClient,
   Command,
-  CommandContext,
+  type CommandContext,
   GatewayIntents
 } from '../mod.ts'
 

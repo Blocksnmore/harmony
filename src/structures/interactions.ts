@@ -1,39 +1,40 @@
 import type { Client } from '../client/client.ts'
 import { transformComponent } from '../utils/components.ts'
-import {
+import type {
   AllowedMentionsPayload,
   ChannelTypes,
   EmbedPayload,
-  MessageOptions
+  MessageOptions,
+  MessagePayload
 } from '../types/channel.ts'
 import { Constants } from '../types/constants.ts'
 import { INTERACTION_CALLBACK, WEBHOOK_MESSAGE } from '../types/endpoint.ts'
 import {
-  InteractionPayload,
+  type InteractionPayload,
   InteractionResponseFlags,
-  InteractionResponsePayload,
+  type InteractionResponsePayload,
   InteractionResponseType,
   InteractionType
 } from '../types/interactions.ts'
-import {
+import type {
   InteractionMessageComponentData,
   InteractionModalSubmitData,
   MessageComponentData
 } from '../types/messageComponents.ts'
-import {
+import type {
   ApplicationCommandChoice,
   InteractionApplicationCommandData,
   InteractionChannelPayload
 } from '../types/applicationCommand.ts'
 import { Permissions } from '../utils/permissions.ts'
 import { SnowflakeBase } from './base.ts'
-import { Channel } from './channel.ts'
+import type { Channel } from './channel.ts'
 import { Embed } from './embed.ts'
-import { Guild } from './guild.ts'
-import { GuildTextChannel } from './guildTextChannel.ts'
-import { Member } from './member.ts'
-import { Message, MessageAttachment } from './message.ts'
-import { TextChannel } from './textChannel.ts'
+import type { Guild } from './guild.ts'
+import type { GuildTextChannel } from './guildTextChannel.ts'
+import type { Member } from './member.ts'
+import { Message, type MessageAttachment } from './message.ts'
+import type { TextChannel } from './textChannel.ts'
 import { User } from './user.ts'
 import type { ApplicationCommandInteraction } from './applicationCommand.ts'
 import type { MessageComponentInteraction } from './messageComponents.ts'
@@ -119,7 +120,7 @@ export class InteractionChannel extends SnowflakeBase {
 
   /** Resolve to actual Channel object if present in Cache */
   async resolve<T extends Channel = Channel>(): Promise<T | undefined> {
-    return this.client.channels.get<T>(this.id)
+    return await this.client.channels.get<T>(this.id)
   }
 }
 
@@ -144,7 +145,7 @@ export class Interaction extends SnowflakeBase {
   /** Interaction Token */
   token: string
   /** Interaction ID */
-  id: string
+  override id: string
   /** Channel in which Interaction was initiated */
   channel?: TextChannel | GuildTextChannel
   /** Guild in which Interaction was initiated */
@@ -373,10 +374,9 @@ export class Interaction extends SnowflakeBase {
     const message = await this.client.rest.get(url)
     return new Message(
       this.client,
-      message,
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      message as MessagePayload,
       this.channel!,
-      new User(this.client, message.author)
+      new User(this.client, (message as MessagePayload).author)
     )
   }
 
@@ -470,11 +470,11 @@ export class Interaction extends SnowflakeBase {
 
     const res = new Message(
       this.client,
-      resp,
+      resp as MessagePayload,
       this as unknown as TextChannel,
       this as unknown as User
     )
-    await res.mentions.fromPayload(resp)
+    await res.mentions.fromPayload(resp as MessagePayload)
     return res
   }
 

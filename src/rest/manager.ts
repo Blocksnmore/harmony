@@ -1,10 +1,10 @@
 import { Collection } from '../utils/collection.ts'
 import type { Client } from '../client/mod.ts'
-import { RequestMethods, METHODS } from './types.ts'
+import { METHODS, type RequestMethods } from './types.ts'
 import { Constants } from '../types/constants.ts'
 import { RESTEndpoints } from './endpoints.ts'
 import { BucketHandler } from './bucket.ts'
-import { APIRequest, RequestOptions } from './request.ts'
+import { APIRequest, type RequestOptions } from './request.ts'
 
 export type MethodFunction = (
   body?: unknown,
@@ -12,7 +12,7 @@ export type MethodFunction = (
   bucket?: string | null,
   rawResponse?: boolean,
   options?: RequestOptions
-) => Promise<any> // untyped JSON
+) => Promise<unknown> // untyped JSON
 
 export interface APIMap extends MethodFunction {
   /** Make a GET request to current route */
@@ -149,8 +149,9 @@ export class RESTManager {
     if (options?.userAgent !== undefined) this.userAgent = options.userAgent
     if (options?.canary !== undefined) this.canary = options.canary
     if (options?.retryLimit !== undefined) this.retryLimit = options.retryLimit
-    if (options?.requestTimeout !== undefined)
+    if (options?.requestTimeout !== undefined) {
       this.requestTimeout = options.requestTimeout
+    }
 
     if (options?.client !== undefined) {
       Object.defineProperty(this, 'client', {
@@ -191,14 +192,14 @@ export class RESTManager {
       if (
         route[i].match(/\d{15,20}/) !== null &&
         route[i - 1].match(/(channels|guilds)/) === null
-      )
+      ) {
         bucket.push('minor_id')
-      else bucket.push(route[i])
+      } else bucket.push(route[i])
     }
     return bucket.join('/')
   }
 
-  async request<T = any>(
+  async request<T = unknown>(
     method: RequestMethods,
     path: string,
     options: RequestOptions = {}
@@ -212,7 +213,8 @@ export class RESTManager {
       this.handlers.set(bucket, handler)
     }
 
-    return handler.push(req)
+    await handler.push(req)
+    return req as T
   }
 
   /**
@@ -224,7 +226,7 @@ export class RESTManager {
    * @param bucket BucketID of the Request
    * @param rawResponse Whether to get Raw Response or body itself
    */
-  async make(
+  async make<T = object>(
     method: RequestMethods,
     url: string,
     body?: unknown,
@@ -232,7 +234,7 @@ export class RESTManager {
     bucket?: string | null,
     rawResponse?: boolean,
     options: RequestOptions = {}
-  ): Promise<any> {
+  ): Promise<T> {
     return await this.request(
       method,
       url,
@@ -248,15 +250,15 @@ export class RESTManager {
   }
 
   /** Makes a GET Request to API */
-  async get(
+  async get<T = unknown>(
     url: string,
     body?: unknown,
     maxRetries = 0,
     bucket?: string | null,
     rawResponse?: boolean,
     options?: RequestOptions
-  ): Promise<any> {
-    return await this.make(
+  ): Promise<T> {
+    return (await this.make<T>(
       'get',
       url,
       body,
@@ -264,19 +266,19 @@ export class RESTManager {
       bucket,
       rawResponse,
       options
-    )
+    )) as T
   }
 
   /** Makes a POST Request to API */
-  async post(
+  async post<T = unknown>(
     url: string,
     body?: unknown,
     maxRetries = 0,
     bucket?: string | null,
     rawResponse?: boolean,
     options?: RequestOptions
-  ): Promise<any> {
-    return await this.make(
+  ): Promise<T> {
+    return await this.make<T>(
       'post',
       url,
       body,
@@ -288,15 +290,15 @@ export class RESTManager {
   }
 
   /** Makes a DELETE Request to API */
-  async delete(
+  async delete<T = unknown>(
     url: string,
     body?: unknown,
     maxRetries = 0,
     bucket?: string | null,
     rawResponse?: boolean,
     options?: RequestOptions
-  ): Promise<any> {
-    return await this.make(
+  ): Promise<T> {
+    return await this.make<T>(
       'delete',
       url,
       body,
@@ -315,7 +317,7 @@ export class RESTManager {
     bucket?: string | null,
     rawResponse?: boolean,
     options?: RequestOptions
-  ): Promise<any> {
+  ): Promise<unknown> {
     return await this.make(
       'patch',
       url,
@@ -328,15 +330,15 @@ export class RESTManager {
   }
 
   /** Makes a PUT Request to API */
-  async put(
+  async put<T = object>(
     url: string,
     body?: unknown,
     maxRetries = 0,
     bucket?: string | null,
     rawResponse?: boolean,
     options?: RequestOptions
-  ): Promise<any> {
-    return await this.make(
+  ): Promise<T> {
+    return await this.make<T>(
       'put',
       url,
       body,

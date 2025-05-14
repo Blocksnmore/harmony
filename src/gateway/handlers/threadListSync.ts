@@ -3,9 +3,12 @@ import type {
   ThreadChannelPayload,
   ThreadMemberPayload
 } from '../../types/channel.ts'
-import { ThreadChannel, ThreadMember } from '../../structures/threadChannel.ts'
+import type {
+  ThreadChannel,
+  ThreadMember
+} from '../../structures/threadChannel.ts'
 import { Collection } from '../../utils/collection.ts'
-import { GuildTextBasedChannel } from '../../structures/guildTextChannel.ts'
+import type { GuildTextBasedChannel } from '../../structures/guildTextChannel.ts'
 
 export const threadListSync: GatewayEventHandler = async (
   gateway: Gateway,

@@ -8,7 +8,7 @@ import type {
   GuildTextBasedChannel,
   GuildTextChannel
 } from '../structures/guildTextChannel.ts'
-import { GuildThreadAvailableChannel } from '../structures/guildThreadAvailableChannel.ts'
+import type { GuildThreadAvailableChannel } from '../structures/guildThreadAvailableChannel.ts'
 import type { VoiceChannel } from '../structures/guildVoiceChannel.ts'
 import type { StageVoiceChannel } from '../structures/guildVoiceStageChannel.ts'
 import type { TextChannel } from '../structures/textChannel.ts'

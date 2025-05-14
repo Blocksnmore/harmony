@@ -33,7 +33,7 @@ export const fetchAuto = async (
     const url = new URL(path)
     if (url.protocol.startsWith('http')) return await fetchRemote(url, onlyData)
     else return await fetchLocal(url, onlyData)
-  } catch (e) {
+  } catch {
     return await fetchLocal(path, onlyData)
   }
 }

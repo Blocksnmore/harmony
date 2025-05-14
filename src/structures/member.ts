@@ -9,7 +9,7 @@ import type { VoiceChannel } from './guildVoiceChannel.ts'
 import type { Role } from './role.ts'
 import type { User } from './user.ts'
 import { ImageURL } from './cdn.ts'
-import type { ImageSize, ImageFormats } from '../types/cdn.ts'
+import type { ImageFormats, ImageSize } from '../types/cdn.ts'
 
 export interface MemberData {
   nick?: string | null
@@ -74,7 +74,7 @@ export class Member extends SnowflakeBase {
           )
         )
       })
-      .catch((e) => {
+      .catch(() => {
         // probably missing permissions, ignore
       })
   }
@@ -85,7 +85,7 @@ export class Member extends SnowflakeBase {
       : this.user.displayName ?? this.user.username
   }
 
-  toString(): string {
+  override toString(): string {
     return this.user.nickMention
   }
 
@@ -110,8 +110,8 @@ export class Member extends SnowflakeBase {
   async fetch(): Promise<Member> {
     const raw = await this.client.rest.get(this.id)
     if (typeof raw !== 'object') throw new Error('Member not found')
-    await this.guild.members.set(this.id, raw)
-    this.readFromData(raw)
+    await this.guild.members.set(this.id, raw as MemberPayload)
+    this.readFromData(raw as MemberPayload)
     return this
   }
 
@@ -142,9 +142,10 @@ export class Member extends SnowflakeBase {
         reason
       }
     )
-    if (res.ok === true) {
-      if (data.nick !== undefined)
+    if ((res as { ok: boolean }).ok === true) {
+      if (data.nick !== undefined) {
         this.nick = data.nick === null ? null : data.nick
+      }
       if (data.deaf !== undefined) this.deaf = data.deaf
       if (data.mute !== undefined) this.mute = data.mute
     }
@@ -282,7 +283,7 @@ export class Member extends SnowflakeBase {
    * @param deleteOldMessages Delete Old Messages? If yes, how much days.
    */
   async ban(reason?: string, deleteOldMessages?: number): Promise<void> {
-    return this.guild.bans.add(this.id, reason, deleteOldMessages)
+    return await this.guild.bans.add(this.id, reason, deleteOldMessages)
   }
 
   async manageable(by?: Member): Promise<boolean> {

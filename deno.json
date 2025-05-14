@@ -1,7 +1,7 @@
 {
   "tasks": {
     "fmt": "npx prettier --write src/ test/ mod.ts deploy.ts deps.ts",
-    "lint": "npx eslint src/ test/ mod.ts deploy.ts deps.ts",
+    "lint": "deno lint src/ test/ mod.ts deploy.ts deps.ts",
     "check": "deno run -A --check mod.ts",
     "build-npm": "deno run -A --no-check ./scripts/build_npm.ts"
   },
@@ -19,5 +19,14 @@
       "tsconfig.json",
       "deno.json"
     ]
+  },
+  "compilerOptions": {
+    "lib": ["esnext", "deno.window", "deno.ns", "deno.unstable"],
+    "jsx": "react",
+    "jsxFactory": "BotUI.createElement",
+    "jsxFragmentFactory": "fragment",
+    "emitDecoratorMetadata": false,
+    "strict": true,
+    "strictNullChecks": true
   }
 }

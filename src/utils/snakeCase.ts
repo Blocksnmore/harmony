@@ -8,12 +8,12 @@ export function camelCase(name: string): string {
 }
 
 // Can't really make an actual type for this
-export function toCamelCase(data: any): any {
+export function toCamelCase(data: unknown): unknown {
   if (Array.isArray(data))
     return data.map((e) => {
       return typeof e === 'object' && e !== null ? toCamelCase(e) : e
     })
-  const result: any = {}
+  const result: unknown = {}
   Object.entries(data).forEach(([k, v]) => {
     result[camelCase(k)] =
       typeof v === 'object' && v !== null ? toCamelCase(v) : v

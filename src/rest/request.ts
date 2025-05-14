@@ -8,7 +8,7 @@ export interface RequestOptions {
   query?: { [name: string]: string }
   files?: MessageAttachment[]
   // Untyped JSON
-  data?: any
+  data?: unknown
   reason?: string
   rawResponse?: boolean
   route?: string
@@ -31,7 +31,7 @@ export class APIRequest {
     ) {
       if (options.query !== undefined) {
         Object.assign(options.query, options.data)
-      } else options.query = options.data
+      } else options.query = options.data as { [name: string]: string }
       options.data = undefined
     }
     if (typeof options.query === 'object') {
@@ -205,7 +205,7 @@ export class APIRequest {
         encodeURIComponent(this.options.reason)
     }
 
-    return fetch(url, init).finally(() => {
+    return await fetch(url, init).finally(() => {
       clearTimeout(timer)
       this.rest.timers.delete(timer)
     })

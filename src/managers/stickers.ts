@@ -30,14 +30,14 @@ export class StickersManager extends BaseManager<
   }
 
   /** Delete a Guild Sticker */
-  async delete(
+  override async delete(
     guild: string | Guild,
     id: string | MessageSticker,
     reason?: string
   ): Promise<boolean> {
     id = typeof id === 'string' ? id : id.id
     const result = await this.client.rest.endpoints
-      .deleteGuildSticker(
+      .deleteGuildSticker<boolean>(
         typeof guild === 'string' ? guild : guild.id,
         id,
         reason
@@ -48,7 +48,9 @@ export class StickersManager extends BaseManager<
   }
 
   /** Fetches a Sticker */
-  async fetch(sticker: MessageSticker | string): Promise<MessageSticker> {
+  override async fetch(
+    sticker: MessageSticker | string
+  ): Promise<MessageSticker> {
     const data = await this.client.rest.endpoints.getSticker(
       typeof sticker === 'string' ? sticker : sticker.id
     )

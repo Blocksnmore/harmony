@@ -7,7 +7,7 @@ import type { GatewayOpcodes, GatewayEvents } from './gateway.ts'
 export interface GatewayResponse {
   op: GatewayOpcodes
   // untyped JSON
-  d: any
+  d: unknown
   s?: number
   t?: GatewayEvents
 }

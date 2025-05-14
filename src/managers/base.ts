@@ -3,7 +3,7 @@ import { Base } from '../structures/base.ts'
 import { Collection } from '../utils/collection.ts'
 
 // unknown does not work here.
-type TDataType<T, T2> = new (client: Client, raw: T, ...args: any[]) => T2
+type TDataType<T, T2> = new (client: Client, raw: T, ...args: unknown[]) => T2
 
 /**
  * Managers handle caching data. And also some REST Methods as required.
@@ -24,7 +24,7 @@ export class BaseManager<T, T2> extends Base {
 
   /** Gets raw value from a cache (payload) */
   async _get(key: string): Promise<T | undefined> {
-    return this.client.cache.get(this.cacheName, key)
+    return await this.client.cache.get(this.cacheName, key)
   }
 
   /** Gets a value from Cache */
@@ -41,12 +41,14 @@ export class BaseManager<T, T2> extends Base {
 
   /** Deletes a key from Cache */
   async _delete(key: string): Promise<boolean> {
-    return this.client.cache.delete(this.cacheName, key)
+    return await this.client.cache.delete(this.cacheName, key)
   }
 
-  // any for backward compatibility and args: unknown[] for allowing
+  // unknown for backward compatibility and args: unknown[] for allowing
   // extending classes to extend number of arguments required.
-  async delete(key: string, ...args: unknown[]): Promise<any> {}
+  async delete(_key: string, ..._args: unknown[]): Promise<boolean> {
+    return await false
+  }
 
   /** Gets an Array of values from Cache */
   async array(): Promise<T2[]> {
@@ -61,10 +63,9 @@ export class BaseManager<T, T2> extends Base {
     if (arr === undefined) return new Collection()
     const collection = new Collection()
     for (const elem of arr) {
-      // @ts-expect-error
-      collection.set(elem.id, elem)
+      collection.set((elem as { id: string }).id, elem)
     }
-    return collection
+    return collection as Collection<string, T2>
   }
 
   async *[Symbol.asyncIterator](): AsyncIterableIterator<T2> {
@@ -73,8 +74,8 @@ export class BaseManager<T, T2> extends Base {
     }
   }
 
-  async fetch(...args: unknown[]): Promise<T2 | undefined> {
-    return undefined
+  async fetch(..._args: unknown[]): Promise<T2 | undefined> {
+    return await undefined
   }
 
   /** Try to get value from cache, if not found then fetch */

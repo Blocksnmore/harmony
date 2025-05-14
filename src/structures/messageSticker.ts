@@ -70,7 +70,7 @@ export class MessageSticker extends SnowflakeBase {
   async delete(reason?: string): Promise<boolean> {
     if (this.guildID === undefined)
       throw new Error('Only Guild Stickers can be deleted')
-    return this.client.stickers.delete(this.guildID, this, reason)
+    return await this.client.stickers.delete(this.guildID, this, reason)
   }
 }
 

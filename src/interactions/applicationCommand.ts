@@ -1,19 +1,19 @@
-import { RESTManager } from '../rest/manager.ts'
+import type { RESTManager } from '../rest/manager.ts'
 import type { Guild } from '../structures/guild.ts'
 import {
   ApplicationCommandType,
-  GuildApplicationCommandPermissions,
-  GuildSlashCommmandPermissionsPartial,
-  GuildSlashCommmandPermissionsPayload,
-  ApplicationCommandChoice,
-  ApplicationCommandOption,
-  ApplicationCommandOptionPayload,
+  type GuildApplicationCommandPermissions,
+  type GuildSlashCommmandPermissionsPartial,
+  type GuildSlashCommmandPermissionsPayload,
+  type ApplicationCommandChoice,
+  type ApplicationCommandOption,
+  type ApplicationCommandOptionPayload,
   ApplicationCommandOptionType,
-  ApplicationCommandPartial,
-  ApplicationCommandPartialPayload,
-  ApplicationCommandPayload,
-  ApplicationCommandPermission,
-  ApplicationCommandPermissionPayload,
+  type ApplicationCommandPartial,
+  type ApplicationCommandPartialPayload,
+  type ApplicationCommandPayload,
+  type ApplicationCommandPermission,
+  type ApplicationCommandPermissionPayload,
   ApplicationCommandPermissionType
 } from '../types/applicationCommand.ts'
 import { ChannelTypes } from '../types/channel.ts'
@@ -135,7 +135,6 @@ function createSlashOption(
 
 export { ApplicationCommand as SlashCommand }
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class SlashOption {
   static string(data: CreateOptions): ApplicationCommandOption {
     return createSlashOption(ApplicationCommandOptionType.STRING, data)

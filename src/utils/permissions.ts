@@ -1,6 +1,6 @@
 // Ported from https://github.com/discordjs/discord.js/blob/master/src/util/Permissions.js
 import { PermissionFlags } from '../types/permissionFlags.ts'
-import { BitField, BitFieldResolvable } from './bitfield.ts'
+import { BitField, type BitFieldResolvable } from './bitfield.ts'
 
 export type PermissionResolvable = BitFieldResolvable
 
@@ -18,7 +18,6 @@ export class Permissions extends BitField {
 
   any(permission: PermissionResolvable, checkAdmin = true): boolean {
     return (
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       (checkAdmin && super.has(this.flags().ADMINISTRATOR)) ||
       super.any(permission)
     )
@@ -26,7 +25,6 @@ export class Permissions extends BitField {
 
   has(permission: PermissionResolvable, checkAdmin = true): boolean {
     return (
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       (checkAdmin && super.has(this.flags().ADMINISTRATOR)) ||
       super.has(permission)
     )

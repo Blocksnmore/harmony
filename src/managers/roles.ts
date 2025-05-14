@@ -1,4 +1,4 @@
-import { Permissions } from '../../mod.ts'
+import type { Permissions } from '../../mod.ts'
 import { fetchAuto } from '../utils/fetchBase64.ts'
 import type { Client } from '../client/mod.ts'
 import type { Guild } from '../structures/guild.ts'
@@ -105,7 +105,6 @@ export class RolesManager extends BaseManager<RolePayload, Role> {
     if (
       options.icon !== undefined &&
       options.icon !== null &&
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       !options.icon.startsWith('data:')
     ) {
       options.icon = await fetchAuto(options.icon)

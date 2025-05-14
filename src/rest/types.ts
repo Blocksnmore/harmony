@@ -32,7 +32,7 @@ export interface DiscordAPIErrorPayload {
   message?: string
   errors: object
   // any for backward compatiblity
-  requestData: Record<string, any>
+  requestData: Record<string, unknown>
 }
 
 export const METHODS = ['get', 'post', 'patch', 'put', 'delete', 'head']

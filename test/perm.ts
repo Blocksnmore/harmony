@@ -1,4 +1,4 @@
-import { InteractionsClient, SlashCommand } from '../mod.ts'
+import { InteractionsClient, type SlashCommand } from '../mod.ts'
 import { TOKEN } from './config.ts'
 
 export const slash = new InteractionsClient({ token: TOKEN })

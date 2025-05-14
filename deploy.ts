@@ -1,16 +1,16 @@
-import { Interaction } from './src/structures/interactions.ts'
+import type { Interaction } from './src/structures/interactions.ts'
 import {
-  ApplicationCommandsManager,
+  type ApplicationCommandsManager,
   InteractionsClient,
-  ApplicationCommandHandler,
-  ApplicationCommandHandlerCallback,
-  AutocompleteHandlerCallback
+  type ApplicationCommandHandler,
+  type ApplicationCommandHandlerCallback,
+  type AutocompleteHandlerCallback
 } from './src/interactions/mod.ts'
 import {
   InteractionResponseType,
   InteractionType
 } from './src/types/interactions.ts'
-import { ApplicationCommandType } from './src/types/applicationCommand.ts'
+import type { ApplicationCommandType } from './src/types/applicationCommand.ts'
 
 export interface DeploySlashInitOptions {
   env?: boolean

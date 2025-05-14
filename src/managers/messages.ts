@@ -83,7 +83,6 @@ export class MessagesManager extends BaseManager<MessagePayload, Message> {
         const res = new Message(
           this.client,
           raw,
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           channel as TextChannel,
           author
         )

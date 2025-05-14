@@ -1,7 +1,7 @@
 import type { Client } from '../client/mod.ts'
 import { BaseChildManager } from './baseChild.ts'
 import type { RolePayload } from '../types/role.ts'
-import { Role } from '../structures/role.ts'
+import type { Role } from '../structures/role.ts'
 import type { Member } from '../structures/member.ts'
 import type { RolesManager } from './roles.ts'
 import type { MemberPayload } from '../types/guild.ts'

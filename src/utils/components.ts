@@ -1,7 +1,7 @@
 import {
   ButtonStyle,
-  MessageComponentData,
-  MessageComponentPayload,
+  type MessageComponentData,
+  type MessageComponentPayload,
   MessageComponentType,
   TextInputStyle
 } from '../types/messageComponents.ts'

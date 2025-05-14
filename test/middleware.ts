@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { CommandClient, CommandContext, Command } from '../mod.ts'
+import { CommandClient, type CommandContext, Command } from '../mod.ts'
 import { Keydb } from 'https://deno.land/x/keydb@1.0.0/sqlite.ts'
 import { TOKEN } from './config.ts'
 
@@ -27,10 +26,10 @@ client.use(async (ctx: CustomContext, next) => {
 
 client.commands.add(
   class extends Command {
-    name = 'balance'
-    aliases = ['bal', 'wallet']
+    override name = 'balance'
+    override aliases = ['bal', 'wallet']
 
-    async execute(ctx: CustomContext): Promise<void> {
+    override async execute(ctx: CustomContext): Promise<void> {
       await ctx.message.reply(`Your have ${ctx.coins} coins.`)
     }
   }
@@ -38,12 +37,12 @@ client.commands.add(
 
 client.commands.add(
   class extends Command {
-    name = 'setbalance'
-    aliases = ['setbal']
-    usage = ['<coins>', '[@user]']
-    ownerOnly = true
+    override name = 'setbalance'
+    override aliases = ['setbal']
+    override usage = ['<coins>', '[@user]']
+    override ownerOnly = true
 
-    async execute(ctx: CustomContext): Promise<void> {
+    override async execute(ctx: CustomContext): Promise<void> {
       const bal = parseInt(ctx.rawArgs[0].replaceAll(/\D/g, ''))
       const user = ctx.message.mentions.users.first() ?? ctx.message.author
 

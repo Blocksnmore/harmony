@@ -29,7 +29,7 @@ import type { UserPayload } from './user.ts'
 import type { VoiceStatePayload } from './voice.ts'
 import type { WebhookPayload } from './webhook.ts'
 import type { User } from '../structures/user.ts'
-import { GuildIntegration } from '../../mod.ts'
+import type { GuildIntegration } from '../../mod.ts'
 
 export interface GuildPayload {
   id: string
@@ -442,9 +442,9 @@ export interface OptionalAuditEntryInfoPayload {
 > If `new_value` is not present in the change object, while `old_value` is, that means the property that was changed has been reset, or set to `null` */
 export interface AuditLogChangePayload {
   /** new value of the key */
-  new_value?: any
+  new_value?: unknown
   /** old value of the key */
-  old_value?: any
+  old_value?: unknown
   /** name of audit log [change key](#DOCS_RESOURCES_AUDIT_LOG/audit-log-change-object-audit-log-change-key) */
   key: string
 }
@@ -498,9 +498,9 @@ export interface OptionalAuditEntryInfo {
 
 export interface AuditLogChange {
   /** new value of the key */
-  newValue?: any
+  newValue?: unknown
   /** old value of the key */
-  oldValue?: any
+  oldValue?: unknown
   /** name of audit log change key */
   key: string
 }

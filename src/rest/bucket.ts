@@ -1,23 +1,21 @@
 // based on https://github.com/discordjs/discord.js/blob/master/src/rest/RequestHandler.js
 // adapted to work with harmony rest manager
 
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
-
 import { delay } from '../utils/delay.ts'
 import { DiscordAPIError, HTTPError } from './error.ts'
 import type { RESTManager } from './manager.ts'
 import { RequestQueue } from './queue.ts'
-import { APIRequest } from './request.ts'
+import type { APIRequest } from './request.ts'
 
 // It returns JSON objects which are untyped so
-async function parseResponse(res: Response, raw: boolean): Promise<any> {
+async function parseResponse(res: Response, raw: boolean): Promise<unknown> {
   let result
   if (res.status === 204) result = Promise.resolve(undefined)
   else if (
     res.headers.get('content-type')?.startsWith('application/json') === true
-  )
+  ) {
     result = res.json()
-  else result = await res.arrayBuffer().then((e) => new Uint8Array(e))
+  } else result = await res.arrayBuffer().then((e) => new Uint8Array(e))
 
   if (raw) {
     return { response: res, body: result }
@@ -35,7 +33,6 @@ function calculateReset(
   return new Date(Number(reset) * 1000).getTime() - getAPIOffset(serverDate)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let invalidCount = 0
 let invalidCountResetTime: number | null = null
 
@@ -48,7 +45,7 @@ export class BucketHandler {
   constructor(public manager: RESTManager) {}
 
   // Returns Response (untyped JSON)
-  async push(request: APIRequest): Promise<any> {
+  async push(request: APIRequest): Promise<unknown> {
     await this.queue.wait()
     let res
     try {
@@ -87,7 +84,7 @@ export class BucketHandler {
     })
   }
 
-  async execute(request: APIRequest): Promise<any> {
+  async execute(request: APIRequest): Promise<unknown> {
     while (this.limited) {
       const isGlobal = this.globalLimited
       let limit, timeout, delayPromise
@@ -95,9 +92,7 @@ export class BucketHandler {
       if (isGlobal) {
         limit = this.manager.globalLimit
         timeout =
-          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
           Number(this.manager.globalReset) +
-          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
           this.manager.restTimeOffset -
           Date.now()
         if (typeof this.manager.globalDelay !== 'number') {
@@ -106,7 +101,6 @@ export class BucketHandler {
         delayPromise = this.manager.globalDelay
       } else {
         limit = this.limit
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         timeout = this.reset + this.manager.restTimeOffset - Date.now()
         delayPromise = delay(timeout)
       }
@@ -122,7 +116,6 @@ export class BucketHandler {
       await delayPromise
     }
 
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!this.manager.globalReset || this.manager.globalReset < Date.now()) {
       this.manager.globalReset = Date.now() + 1000
       this.manager.globalRemaining = this.manager.globalLimit
@@ -169,7 +162,6 @@ export class BucketHandler {
       let retryAfter: number | null | string = res.headers.get('retry-after')
       retryAfter = retryAfter !== null ? Number(retryAfter) * 1000 : -1
       if (retryAfter > 0) {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (res.headers.get('x-ratelimit-global')) {
           this.manager.globalRemaining = 0
           this.manager.globalReset = Date.now() + retryAfter
@@ -180,12 +172,10 @@ export class BucketHandler {
     }
 
     if (res.status === 401 || res.status === 403 || res.status === 429) {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (!invalidCountResetTime || invalidCountResetTime < Date.now()) {
         invalidCountResetTime = Date.now() + 1000 * 60 * 10
         invalidCount = 0
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       invalidCount++
     }
 
@@ -210,7 +200,11 @@ export class BucketHandler {
 
       let data
       try {
-        data = await parseResponse(res, false)
+        data = (await parseResponse(res, false)) as {
+          errors: object
+          message: string
+          code: number
+        }
       } catch (_err) {
         const err = _err as HTTPError
         throw new HTTPError(
@@ -229,7 +223,7 @@ export class BucketHandler {
         method: request.method,
         message: data?.message,
         code: data?.code,
-        requestData: request.options.data
+        requestData: request.options.data as Record<string, unknown>
       })
     }
 

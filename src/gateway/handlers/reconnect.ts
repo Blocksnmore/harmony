@@ -1,9 +1,6 @@
 import type { Gateway, GatewayEventHandler } from '../mod.ts'
 
-export const reconnect: GatewayEventHandler = async (
-  gateway: Gateway,
-  d: unknown
-) => {
+export const reconnect: GatewayEventHandler = async (gateway: Gateway) => {
   gateway.client.emit('reconnect', gateway.shards?.[0] ?? 0)
-  gateway.reconnect()
+  await gateway.reconnect()
 }

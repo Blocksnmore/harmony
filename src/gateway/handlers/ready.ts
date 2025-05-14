@@ -1,5 +1,5 @@
 import { User } from '../../structures/user.ts'
-import { GatewayIntents, Ready } from '../../types/gateway.ts'
+import { GatewayIntents, type Ready } from '../../types/gateway.ts'
 import type { Gateway, GatewayEventHandler } from '../mod.ts'
 
 export const ready: GatewayEventHandler = async (

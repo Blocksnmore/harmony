@@ -1,6 +1,6 @@
-import { Client } from '../client/client.ts'
+import type { Client } from '../client/client.ts'
 import { ChannelThreadsManager } from '../managers/channelThreads.ts'
-import {
+import type {
   ChannelTypes,
   GuildThreadAvailableChannelPayload,
   ModifyGuildThreadAvailableChannelOption,
@@ -8,9 +8,9 @@ import {
 } from '../types/channel.ts'
 import { CHANNEL } from '../types/endpoint.ts'
 import { GuildChannel } from './channel.ts'
-import { Guild } from './guild.ts'
-import { Message } from './message.ts'
-import { ThreadChannel, ThreadMember } from './threadChannel.ts'
+import type { Guild } from './guild.ts'
+import type { Message } from './message.ts'
+import type { ThreadChannel, ThreadMember } from './threadChannel.ts'
 
 export interface CreateThreadOptions {
   /** 2-100 character channel name */

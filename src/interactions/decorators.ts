@@ -1,19 +1,19 @@
 import {
-  ApplicationCommandHandler,
-  ApplicationCommandHandlerCallback,
-  AutocompleteHandler,
-  AutocompleteHandlerCallback,
-  ComponentInteractionCallback,
+  type ApplicationCommandHandler,
+  type ApplicationCommandHandlerCallback,
+  type AutocompleteHandler,
+  type AutocompleteHandlerCallback,
+  type ComponentInteractionCallback,
   InteractionsClient,
-  ComponentInteractionHandler
+  type ComponentInteractionHandler
 } from './client.ts'
 import type { Client } from '../client/mod.ts'
 import { ApplicationCommandsModule } from './commandModule.ts'
-import { ApplicationCommandInteraction } from '../structures/applicationCommand.ts'
+import type { ApplicationCommandInteraction } from '../structures/applicationCommand.ts'
 import { GatewayIntents } from '../types/gateway.ts'
 import { ApplicationCommandType } from '../types/applicationCommand.ts'
-import { MessageComponentInteraction } from '../structures/messageComponents.ts'
-import { ModalSubmitInteraction } from '../structures/modalSubmitInteraction.ts'
+import type { MessageComponentInteraction } from '../structures/messageComponents.ts'
+import type { ModalSubmitInteraction } from '../structures/modalSubmitInteraction.ts'
 
 /**
  * Type extension that adds the `_decoratedAppCmd` list.
@@ -53,7 +53,7 @@ type AutocompleteDecorator = (
   ctx: ClassMethodDecoratorContext<ApplicationCommandClientExt>
 ) => void
 
-type MessageComponentDecorator<T = any> = (
+type MessageComponentDecorator<T = unknown> = (
   original: ComponentInteractionCallback<T>,
   ctx: ClassMethodDecoratorContext<ApplicationCommandClientExt>
 ) => void
@@ -600,7 +600,6 @@ export function isBotInVoiceChannel(
   ) {
     const validation: CommandValidation = {
       condition: async (i: ApplicationCommandInteraction) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (!i.client.intents?.includes(GatewayIntents.GUILD_VOICE_STATES)) {
           const err =
             '@isBotInVoiceChannel: GatewayIntents.GUILD_VOICE_STATES needs to be set.'
@@ -636,7 +635,6 @@ export function isUserInVoiceChannel(
   ) {
     const validation: CommandValidation = {
       condition: async (i: ApplicationCommandInteraction): Promise<boolean> => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (!i.client.intents?.includes(GatewayIntents.GUILD_VOICE_STATES)) {
           const err =
             '@isUserInVoiceChannel: GatewayIntents.GUILD_VOICE_STATES needs to be set.'

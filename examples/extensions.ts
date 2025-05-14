@@ -1,8 +1,8 @@
 import {
   CommandClient,
   Command,
-  CommandContext,
-  Message,
+  type CommandContext,
+  type Message,
   Extension,
   GatewayIntents
 } from '../mod.ts'

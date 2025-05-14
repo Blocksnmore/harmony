@@ -1,6 +1,6 @@
-import { Guild } from '../../../mod.ts'
+import type { Guild } from '../../../mod.ts'
 import { transformAuditLogEntryPayload } from '../../structures/guild.ts'
-import { GuildAuditLogEntryCreatePayload } from '../../types/gateway.ts'
+import type { GuildAuditLogEntryCreatePayload } from '../../types/gateway.ts'
 import type { Gateway, GatewayEventHandler } from '../mod.ts'
 
 export const guildAuditLogEntryCreate: GatewayEventHandler = async (

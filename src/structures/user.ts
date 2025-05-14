@@ -6,12 +6,12 @@ import { ImageURL } from './cdn.ts'
 import type { ImageSize, ImageFormats } from '../types/cdn.ts'
 import { DEFAULT_USER_AVATAR, USER_AVATAR } from '../types/endpoint.ts'
 import type { DMChannel } from './dmChannel.ts'
-import { AllMessageOptions } from './textChannel.ts'
-import { Message } from './message.ts'
-import { IResolvable } from './resolvable.ts'
+import type { AllMessageOptions } from './textChannel.ts'
+import type { Message } from './message.ts'
+import type { IResolvable } from './resolvable.ts'
 
 export class User extends SnowflakeBase {
-  id: string
+  override id: string
   username!: string
   displayName!: string
   discriminator!: string
@@ -83,12 +83,12 @@ export class User extends SnowflakeBase {
         : this.publicFlags
   }
 
-  toString(): string {
+  override toString(): string {
     return this.mention
   }
 
   async createDM(): Promise<DMChannel> {
-    return this.client.createDM(this)
+    return await this.client.createDM(this)
   }
 
   async resolveDM(): Promise<DMChannel> {
@@ -100,7 +100,6 @@ export class User extends SnowflakeBase {
       (await this.createDM().then((chan) =>
         this.client.channels.setUserDM(this.id, chan.id).then(() => chan)
       ))
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return dm!
   }
 
@@ -114,19 +113,19 @@ export class User extends SnowflakeBase {
 }
 
 export class UserResolvable extends SnowflakeBase implements IResolvable<User> {
-  constructor(client: Client, public id: string) {
+  constructor(client: Client, public override id: string) {
     super(client)
   }
 
   async get(): Promise<User | undefined> {
-    return this.client.users.get(this.id)
+    return await this.client.users.get(this.id)
   }
 
   async fetch(): Promise<User> {
-    return this.client.users.fetch(this.id)
+    return await this.client.users.fetch(this.id)
   }
 
   async resolve(): Promise<User | undefined> {
-    return this.client.users.resolve(this.id)
+    return await this.client.users.resolve(this.id)
   }
 }

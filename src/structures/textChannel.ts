@@ -34,7 +34,7 @@ export class TextChannel extends Channel {
     this.readFromData(data)
   }
 
-  readFromData(data: TextChannelPayload): void {
+  override readFromData(data: TextChannelPayload): void {
     super.readFromData(data)
     this.lastMessageID = data.last_message_id ?? this.lastMessageID
     this.lastPinTimestamp = data.last_pin_timestamp ?? this.lastPinTimestamp
@@ -60,7 +60,7 @@ export class TextChannel extends Channel {
     if (option instanceof Embed) {
       option = { embeds: [option] }
     }
-    return this.client.channels.sendMessage(this, content, {
+    return await this.client.channels.sendMessage(this, content, {
       allowedMentions: this.client.defaultAllowedMentions,
       ...option,
       reply
@@ -78,7 +78,7 @@ export class TextChannel extends Channel {
     text?: string,
     option?: MessageOptions
   ): Promise<Message> {
-    return this.client.channels.editMessage(this, message, text, option)
+    return await this.client.channels.editMessage(this, message, text, option)
   }
 
   /** Add a reaction to a Message in this Channel */
@@ -195,15 +195,15 @@ export class TextChannel extends Channel {
   }
 
   async getPinnedMessages(): Promise<Collection<string, Message>> {
-    return this.client.channels.getPinnedMessages(this)
+    return await this.client.channels.getPinnedMessages(this)
   }
 
   async pinMessage(message: string | Message): Promise<void> {
-    return this.client.channels.pinMessage(this, message)
+    return await this.client.channels.pinMessage(this, message)
   }
 
   async unpinMessage(message: string | Message): Promise<void> {
-    return this.client.channels.unpinMessage(this, message)
+    return await this.client.channels.unpinMessage(this, message)
   }
 
   /** Trigger the typing indicator. NOT recommended to be used by bots unless you really want to. */

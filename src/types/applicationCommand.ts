@@ -10,7 +10,7 @@ export interface InteractionApplicationCommandOption {
   /** Type of Option */
   type: ApplicationCommandOptionType
   /** Value of the option */
-  value?: any
+  value?: unknown
   /** Sub options */
   options?: InteractionApplicationCommandOption[]
   /** Whether this option was focused in Autocomplete Interaction */
@@ -51,7 +51,7 @@ export interface ApplicationCommandChoice {
   /** (Display) name of the Choice */
   name: string
   /** Actual value to be sent in Interaction Slash Command Data */
-  value: any
+  value: unknown
 }
 
 export type { ApplicationCommandChoice as SlashCommandChoice }

@@ -3,7 +3,7 @@ import {
   event,
   Intents,
   command,
-  CommandContext,
+  type CommandContext,
   Extension,
   CommandBuilder
 } from '../mod.ts'

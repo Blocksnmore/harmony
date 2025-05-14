@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable no-control-regex */
 import { Client, Embed } from '../mod.ts'
 import { TOKEN } from './config.ts'
 
@@ -9,12 +7,15 @@ const client = new Client({
 })
 
 const NAME_MATCH = /[^a-zA-Z0-9_]/
+// I have no clue how the fuck this regex works so i'm not gonna try to fix it - Bloxs
+// deno-lint-ignore no-control-regex
 const STD_REGEX = /\/?std(@[\x00-\x2e\x30-\xff]+)?\/([a-zA-Z0-9]+)(\/[\S\s]+)?/
+// deno-lint-ignore no-control-regex
 const X_REGEX = /\/?x\/([a-zA-Z0-9]+)(@[\x00-\x2e\x30-\xff]+)?(\/[\S\s]+)?/
 
-export async function fetchModule(name: string): Promise<any> {
+export async function fetchModule(name: string): Promise<unknown> {
   if (name.match(NAME_MATCH) !== null) return null
-  return fetch(`https://api.deno.land/modules/${name}`, {
+  return await fetch(`https://api.deno.land/modules/${name}`, {
     credentials: 'omit',
     headers: {
       'User-Agent':
@@ -63,7 +64,10 @@ client.on('messageCreate', async (msg) => {
 
     x = x.trim()
     const name = x.split('/')[0].split('@')[0]
-    const mod = await fetchModule(type === 'std' ? 'std' : name)
+    const mod = (await fetchModule(type === 'std' ? 'std' : name)) as {
+      description: string
+      star_count: number
+    } | null
     if (mod === null) return
 
     msg.channel.send(
@@ -77,8 +81,8 @@ client.on('messageCreate', async (msg) => {
         .setTitle(
           `${type}${x.startsWith('/') || x.startsWith('@') ? '' : '/'}${x}`
         )
-        .setDescription(mod.description ?? 'No description.')
-        .setFooter(`${mod.star_count ?? 0}`, 'https://kokoro.pw/colleague.png')
+        .setDescription(mod!.description ?? 'No description.')
+        .setFooter(`${mod!.star_count ?? 0}`, 'https://kokoro.pw/colleague.png')
     )
   }
 })

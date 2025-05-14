@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-return */
 import type { Guild } from '../structures/guild.ts'
 import type { Message } from '../structures/message.ts'
 import type { TextChannel } from '../structures/textChannel.ts'
@@ -8,7 +7,7 @@ import type { CommandClient } from './client.ts'
 import type { Extension } from './extension.ts'
 import { join, walk } from '../../deps.ts'
 import type { Args } from '../utils/command.ts'
-import { Member } from '../structures/member.ts'
+import type { Member } from '../structures/member.ts'
 
 export interface CommandContext {
   /** The Client object */
@@ -112,31 +111,31 @@ export class Command implements CommandOptions {
   globalCooldown?: number
 
   /** Method called when the command errors */
-  onError(ctx: CommandContext, error: Error): unknown | Promise<unknown> {
+  onError(_ctx: CommandContext, _error: Error): unknown | Promise<unknown> {
     return
   }
 
   /** Method called when there are missing arguments */
-  onMissingArgs(ctx: CommandContext): unknown | Promise<unknown> {
+  onMissingArgs(_ctx: CommandContext): unknown | Promise<unknown> {
     return
   }
 
   /** Method executed before executing actual command. Returns bool value - whether to continue or not (optional) */
   beforeExecute(
-    ctx: CommandContext
+    _ctx: CommandContext
   ): boolean | Promise<boolean> | unknown | Promise<unknown> {
     return true
   }
 
   /** Actual command code, which is executed when all checks have passed. */
-  execute(ctx: CommandContext): unknown | Promise<unknown> {
+  execute(_ctx: CommandContext): unknown | Promise<unknown> {
     return
   }
 
   /** Method executed after executing command, passes on CommandContext and the value returned by execute too. (optional) */
   afterExecute<T>(
-    ctx: CommandContext,
-    executeResult: T
+    _ctx: CommandContext,
+    _executeResult: T
   ): unknown | Promise<unknown> {
     return
   }
@@ -374,9 +373,7 @@ export class CommandsLoader {
 
     if (this.#importSeq[filePath] !== undefined) seq = this.#importSeq[filePath]
     const mod = await import(
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       'file:///' +
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         join(Deno.cwd(), filePath) +
         (seq === undefined ? '' : `#${seq}`)
     )
@@ -392,7 +389,7 @@ export class CommandsLoader {
       if (Cmd instanceof Command) cmd = Cmd
       else cmd = new Cmd()
       if (!(cmd instanceof Command)) throw new Error('failed')
-    } catch (e) {
+    } catch {
       throw new Error(`Failed to load Command from ${filePath}`)
     }
 

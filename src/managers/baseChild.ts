@@ -1,7 +1,7 @@
 import type { Client } from '../client/mod.ts'
 import { Base } from '../structures/base.ts'
 import { Collection } from '../utils/collection.ts'
-import { BaseManager } from './base.ts'
+import type { BaseManager } from './base.ts'
 
 /** Child Managers validate data from their parents i.e. from Managers */
 export class BaseChildManager<T, T2> extends Base {
@@ -20,19 +20,19 @@ export class BaseChildManager<T, T2> extends Base {
   }
 
   async get(key: string): Promise<T2 | undefined> {
-    return this.parent.get(key)
+    return await this.parent.get(key)
   }
 
   async set(key: string, value: T): Promise<void> {
-    return this.parent.set(key, value)
+    return await this.parent.set(key, value)
   }
 
   async delete(_: string): Promise<boolean> {
-    return false
+    return await false
   }
 
   async array(): Promise<T2[]> {
-    return this.parent.array()
+    return await this.parent.array()
   }
 
   async collection(): Promise<Collection<string, T2>> {
@@ -42,7 +42,7 @@ export class BaseChildManager<T, T2> extends Base {
     for (const elem of arr) {
       collection.set((elem as unknown as { id: string }).id, elem)
     }
-    return collection
+    return collection as Collection<string, T2>
   }
 
   async *[Symbol.asyncIterator](): AsyncIterableIterator<T2> {
@@ -52,7 +52,7 @@ export class BaseChildManager<T, T2> extends Base {
   }
 
   async fetch(...args: unknown[]): Promise<T2 | undefined> {
-    return this.parent.fetch(...args)
+    return await this.parent.fetch(...args)
   }
 
   /** Try to get value from cache, if not found then fetch */
@@ -67,11 +67,11 @@ export class BaseChildManager<T, T2> extends Base {
 
   /** Gets number of values stored in Cache */
   async size(): Promise<number> {
-    return this.parent.size()
+    return await this.parent.size()
   }
 
   async keys(): Promise<string[]> {
-    return this.parent.keys()
+    return await this.parent.keys()
   }
 
   [Symbol.for('Deno.customInspect')](): string {

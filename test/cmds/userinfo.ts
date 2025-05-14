@@ -1,12 +1,12 @@
-import { Command, Member, CommandContext, Embed } from '../../mod.ts'
+import { Command, type Member, type CommandContext, Embed } from '../../mod.ts'
 
 export default class UserinfoCommand extends Command {
-  name = 'userinfo'
-  guildOnly = true
-  aliases = ['u', 'user']
+  override name = 'userinfo'
+  override guildOnly = true
+  override aliases = ['u', 'user']
 
-  async execute(ctx: CommandContext): Promise<void> {
-    const member: Member = ctx.message.member as any
+  override async execute(ctx: CommandContext): Promise<void> {
+    const member: Member = ctx.message.member!
     const roles = await member.roles.array()
     const embed = new Embed()
       .setTitle(`User Info`)

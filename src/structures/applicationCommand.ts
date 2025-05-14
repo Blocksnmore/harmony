@@ -1,9 +1,9 @@
 import type { Client } from '../client/mod.ts'
-import { InteractionPayload } from '../types/interactions.ts'
+import type { InteractionPayload } from '../types/interactions.ts'
 import {
-  InteractionApplicationCommandData,
-  InteractionApplicationCommandOption,
-  ApplicationCommandOptionType
+  ApplicationCommandOptionType,
+  type InteractionApplicationCommandData,
+  type InteractionApplicationCommandOption
 } from '../types/applicationCommand.ts'
 import type { Dict } from '../utils/dict.ts'
 import type { Guild } from './guild.ts'
@@ -11,11 +11,11 @@ import type { GuildTextChannel } from './guildTextChannel.ts'
 import type { Member } from './member.ts'
 import type { Role } from './role.ts'
 import type { TextChannel } from './textChannel.ts'
-import { User } from './user.ts'
+import type { User } from './user.ts'
 import {
-  InteractionUser,
-  InteractionChannel,
-  Interaction
+  Interaction,
+  type InteractionChannel,
+  type InteractionUser
 } from './interactions.ts'
 import type { Message } from './message.ts'
 import type { Attachment } from '../types/channel.ts'
@@ -33,7 +33,7 @@ export class ApplicationCommandInteraction extends Interaction {
   declare guildLocale: string
 
   /** Data sent with Interaction. Only applies to Application Command */
-  data: InteractionApplicationCommandData
+  override data: InteractionApplicationCommandData
   /** Resolved data for Snowflakes in Slash Command Arguments */
   resolved: InteractionApplicationCommandResolved
 
@@ -49,7 +49,6 @@ export class ApplicationCommandInteraction extends Interaction {
     }
   ) {
     super(client, data, others)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     this.data = data.data as InteractionApplicationCommandData
     this.resolved = others.resolved
   }
@@ -76,15 +75,17 @@ export class ApplicationCommandInteraction extends Interaction {
   get subCommand(): string | undefined {
     if (
       this.data.options?.[0]?.type === ApplicationCommandOptionType.SUB_COMMAND
-    )
+    ) {
       return this.data.options[0].name
-    else if (
+    } else if (
       this.data.options?.[0]?.type ===
         ApplicationCommandOptionType.SUB_COMMAND_GROUP &&
       this.data.options?.[0]?.options?.[0]?.type ===
         ApplicationCommandOptionType.SUB_COMMAND
-    )
+    ) {
       return this.data.options[0].options[0].name
+    }
+    return undefined
   }
 
   /** Gets sub command group name from options */
@@ -92,8 +93,11 @@ export class ApplicationCommandInteraction extends Interaction {
     if (
       this.data.options?.[0]?.type ===
       ApplicationCommandOptionType.SUB_COMMAND_GROUP
-    )
+    ) {
       return this.data.options[0].name
+    }
+
+    return undefined
   }
 
   /** Target ID. Only valid for Context Menu commands */
@@ -130,15 +134,26 @@ export class ApplicationCommandInteraction extends Interaction {
     const op = options.find((e) => e.name === name)
     if (op === undefined || op.value === undefined) return undefined as T
     if (op.type === ApplicationCommandOptionType.USER) {
-      const u: InteractionUser = this.resolved.users[op.value]
-      if (this.resolved.members[op.value] !== undefined)
-        u.member = this.resolved.members[op.value]
+      const u: InteractionUser =
+        this.resolved.users[op.value as keyof typeof this.resolved.users]
+      if (
+        this.resolved.members[
+          op.value as keyof typeof this.resolved.members
+        ] !== undefined
+      ) {
+        u.member =
+          this.resolved.members[op.value as keyof typeof this.resolved.members]
+      }
       return u as T
-    } else if (op.type === ApplicationCommandOptionType.ROLE)
-      return this.resolved.roles[op.value] as T
-    else if (op.type === ApplicationCommandOptionType.CHANNEL)
-      return this.resolved.channels[op.value] as T
-    else return op.value
+    } else if (op.type === ApplicationCommandOptionType.ROLE) {
+      return this.resolved.roles[
+        op.value as keyof typeof this.resolved.roles
+      ] as T
+    } else if (op.type === ApplicationCommandOptionType.CHANNEL) {
+      return this.resolved.channels[
+        op.value as keyof typeof this.resolved.channels
+      ] as T
+    } else return op.value as T
   }
 }
 

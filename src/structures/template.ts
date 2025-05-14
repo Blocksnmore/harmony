@@ -47,19 +47,19 @@ export class Template extends Base {
   /** Modifies the template's metadata. Requires the MANAGE_GUILD permission. Returns the template object on success. */
   async edit(data: ModifyGuildTemplateParams): Promise<Template> {
     const res = await this.client.rest.patch(TEMPLATE(this.code), data)
-    return new Template(this.client, res)
+    return new Template(this.client, res as TemplatePayload)
   }
 
   /** Deletes the template. Requires the MANAGE_GUILD permission. Returns the deleted template object on success. */
   async delete(): Promise<Template> {
     const res = await this.client.rest.delete(TEMPLATE(this.code))
-    return new Template(this.client, res)
+    return new Template(this.client, res as TemplatePayload)
   }
 
   /** Syncs the template to the guild's current state. Requires the MANAGE_GUILD permission. Returns the template object on success. */
   async sync(): Promise<Template> {
     const res = await this.client.rest.put(TEMPLATE(this.code))
-    return new Template(this.client, res)
+    return new Template(this.client, res as TemplatePayload)
   }
 }
 

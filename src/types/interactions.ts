@@ -1,10 +1,10 @@
-import {
+import type {
   AllowedMentionsPayload,
   EmbedPayload,
   MessagePayload
 } from './channel.ts'
 import type { MemberPayload } from './guild.ts'
-import {
+import type {
   InteractionMessageComponentData,
   MessageComponentPayload
 } from './messageComponents.ts'
@@ -13,7 +13,7 @@ import type {
   InteractionApplicationCommandData
 } from './applicationCommand.ts'
 import type { UserPayload } from './user.ts'
-import { MessageAttachment } from '../structures/message.ts'
+import type { MessageAttachment } from '../structures/message.ts'
 
 export enum InteractionType {
   /** Ping sent by the API (HTTP-only) */

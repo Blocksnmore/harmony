@@ -1,7 +1,7 @@
 import type { Client } from '../client/mod.ts'
-import { Guild } from '../structures/guild.ts'
+import type { Guild } from '../structures/guild.ts'
 import { MessageSticker } from '../structures/messageSticker.ts'
-import {
+import type {
   CreateGuildStickerOptions,
   MessageStickerPayload,
   ModifyGuildStickerOptions
@@ -17,7 +17,7 @@ export class GuildStickersManager extends BaseChildManager<
   }
 
   /** Fetches Guild Sticker from API */
-  async fetch(id: string): Promise<MessageSticker> {
+  override async fetch(id: string): Promise<MessageSticker> {
     const sticker = await this.client.stickers.fetch(id)
     if (sticker.guildID === this.guild.id)
       throw new Error(
@@ -27,18 +27,21 @@ export class GuildStickersManager extends BaseChildManager<
   }
 
   /** Delete a Guild Sticker */
-  async delete(id: string | MessageSticker, reason?: string): Promise<boolean> {
-    return this.client.stickers.delete(this.guild, id, reason)
+  override async delete(
+    id: string | MessageSticker,
+    reason?: string
+  ): Promise<boolean> {
+    return await this.client.stickers.delete(this.guild, id, reason)
   }
 
   /** Fetches all Guild Stickers from API (and caches them) */
   async fetchAll(): Promise<MessageSticker[]> {
-    return this.client.stickers.fetchAll(this.guild)
+    return await this.client.stickers.fetchAll(this.guild)
   }
 
   /** Creates a new Guild Sticker */
   async create(options: CreateGuildStickerOptions): Promise<MessageSticker> {
-    return this.client.stickers.create(this.guild, options)
+    return await this.client.stickers.create(this.guild, options)
   }
 
   /** Edit an existing Guild Sticker */
@@ -46,11 +49,11 @@ export class GuildStickersManager extends BaseChildManager<
     sticker: string | MessageSticker,
     options: Partial<ModifyGuildStickerOptions>
   ): Promise<MessageSticker> {
-    return this.client.stickers.edit(this.guild, sticker, options)
+    return await this.client.stickers.edit(this.guild, sticker, options)
   }
 
   /** Returns a list of IDs of all Stickers in this Guild */
-  async keys(): Promise<string[]> {
+  override async keys(): Promise<string[]> {
     const keys = []
     for (const sticker of ((await this.client.cache.array('stickers')) ??
       []) as MessageStickerPayload[]) {
@@ -60,7 +63,7 @@ export class GuildStickersManager extends BaseChildManager<
   }
 
   /** Returns an Array of all Stickers in this Guild */
-  async array(): Promise<MessageSticker[]> {
+  override async array(): Promise<MessageSticker[]> {
     const stickers = []
     for (const sticker of ((await this.client.cache.array('stickers')) ??
       []) as MessageStickerPayload[]) {

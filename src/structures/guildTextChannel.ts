@@ -34,12 +34,12 @@ export class GuildTextBasedChannel extends GuildTextBasedChannelSuper {
     this.readFromData(data)
   }
 
-  readFromData(data: GuildTextBasedChannelPayload): void {
+  override readFromData(data: GuildTextBasedChannelPayload): void {
     super.readFromData(data)
   }
 
   /** Edit the Guild Text Channel */
-  async edit(
+  override async edit(
     options?: ModifyGuildTextBasedChannelOption
   ): Promise<GuildTextBasedChannel> {
     const body: ModifyGuildTextBasedChannelPayload = {
@@ -52,7 +52,11 @@ export class GuildTextBasedChannel extends GuildTextBasedChannelSuper {
 
     const resp = await this.client.rest.patch(CHANNEL(this.id), body)
 
-    return new GuildTextBasedChannel(this.client, resp, this.guild)
+    return new GuildTextBasedChannel(
+      this.client,
+      resp as GuildTextBasedChannelPayload,
+      this.guild
+    )
   }
 
   /**
@@ -71,7 +75,7 @@ export class GuildTextBasedChannel extends GuildTextBasedChannelSuper {
       if (list.length < messages) list = (await this.fetchMessages()).array()
       ids = list
         .sort((b, a) => a.createdAt.getTime() - b.createdAt.getTime())
-        .filter((e, i) => i < messages)
+        .filter((_e, i) => i < messages)
         .filter(
           (e) =>
             new Date().getTime() - e.createdAt.getTime() <=
@@ -94,7 +98,7 @@ export class GuildTextBasedChannel extends GuildTextBasedChannelSuper {
 
 const GuildTextChannelSuper: (abstract new (
   client: Client,
-  data: any,
+  data: unknown,
   guild: Guild
 ) => GuildTextBasedChannel & GuildThreadAvailableChannel) &
   Pick<typeof GuildTextBasedChannel, keyof typeof GuildTextBasedChannel> &

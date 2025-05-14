@@ -4,7 +4,7 @@ import { HarmonyEventEmitter } from '../utils/events.ts'
 
 // Note: need to keep anys here for compatibility
 
-export type CollectorFilter = (...args: any[]) => boolean | Promise<boolean>
+export type CollectorFilter = (...args: unknown[]) => boolean | Promise<boolean>
 
 export interface CollectorOptions {
   /** Event name to listen for */
@@ -21,15 +21,14 @@ export interface CollectorOptions {
   timeout?: number
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type CollectorEvents = {
   start: []
   end: []
-  collect: any[]
+  collect: unknown[]
 }
 
 export class Collector<
-  T extends unknown[] = any[]
+  T extends unknown[] = unknown[]
 > extends HarmonyEventEmitter<CollectorEvents> {
   client?: Client
   private _started: boolean = false
@@ -149,7 +148,6 @@ export class Collector<
   async wait(timeout?: number): Promise<this> {
     if (timeout === undefined) timeout = this.timeout ?? 0
     return await new Promise((resolve, reject) => {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (!timeout)
         throw new Error(
           'Timeout is required parameter if not given in CollectorOptions'

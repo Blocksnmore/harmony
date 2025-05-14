@@ -1,8 +1,8 @@
 import type { Client } from '../client/mod.ts'
 import { BaseChildManager } from './baseChild.ts'
 import type { VoiceStatePayload } from '../types/voice.ts'
-import { VoiceState } from '../structures/voiceState.ts'
-import { GuildVoiceStatesManager } from './guildVoiceStates.ts'
+import type { VoiceState } from '../structures/voiceState.ts'
+import type { GuildVoiceStatesManager } from './guildVoiceStates.ts'
 import type { VoiceChannel } from '../structures/guildVoiceChannel.ts'
 
 export class GuildChannelVoiceStatesManager extends BaseChildManager<

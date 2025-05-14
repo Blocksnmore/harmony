@@ -1,4 +1,4 @@
-import { Client, Message, GatewayIntents } from '../mod.ts'
+import { Client, type Message, GatewayIntents } from '../mod.ts'
 
 const client = new Client()
 

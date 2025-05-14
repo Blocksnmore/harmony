@@ -1,6 +1,6 @@
-import { Guild } from '../../structures/guild.ts'
-import { MessageSticker } from '../../structures/messageSticker.ts'
-import { MessageStickerPayload } from '../../types/channel.ts'
+import type { Guild } from '../../structures/guild.ts'
+import type { MessageSticker } from '../../structures/messageSticker.ts'
+import type { MessageStickerPayload } from '../../types/channel.ts'
 import type { Gateway, GatewayEventHandler } from '../mod.ts'
 
 export const guildStickersUpdate: GatewayEventHandler = async (

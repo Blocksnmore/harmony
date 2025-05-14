@@ -1,12 +1,12 @@
 import {
   CommandClient,
   Command,
-  CommandContext,
+  type CommandContext,
   ButtonStyle,
   MessageComponentType,
   isMessageComponentInteraction,
-  MessageComponentInteraction,
-  Message
+  type MessageComponentInteraction,
+  type Message
 } from '../mod.ts'
 import { TOKEN } from './config.ts'
 
@@ -139,7 +139,7 @@ client.commands.add(
   class extends Command {
     name = 'play'
 
-    execute(ctx: CommandContext): any {
+    execute(ctx: CommandContext): unknown {
       if (games.has(ctx.author.id))
         return ctx.message.reply('You are already playing!')
       ctx.channel
@@ -170,7 +170,7 @@ client.on('interactionCreate', (i) => {
       const game = games.get(d.user.id)
       if (game === undefined) return
       const choice = d.customID.split('::')[1]
-      const c: number = Number(Choice[choice as any])
+      const c: number = Number(Choice[choice as keyof typeof Choice])
       const rand = Math.floor(Math.random() * 2)
 
       game.txt += '\n\n'

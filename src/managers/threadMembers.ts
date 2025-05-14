@@ -1,9 +1,12 @@
 import type { Client } from '../client/mod.ts'
-import { ThreadMemberPayload } from '../types/channel.ts'
+import type { ThreadMemberPayload } from '../types/channel.ts'
 import { CHANNEL } from '../types/endpoint.ts'
 import { BaseManager } from './base.ts'
-import { ThreadChannel, ThreadMember } from '../structures/threadChannel.ts'
-import { User } from '../../mod.ts'
+import {
+  type ThreadChannel,
+  ThreadMember
+} from '../structures/threadChannel.ts'
+import type { User } from '../../mod.ts'
 
 export class ThreadMembersManager extends BaseManager<
   ThreadMemberPayload,
@@ -13,7 +16,7 @@ export class ThreadMembersManager extends BaseManager<
     super(client, `thread_members:${thread.id}`, ThreadMember)
   }
 
-  async get(id: string): Promise<ThreadMember | undefined> {
+  override async get(id: string): Promise<ThreadMember | undefined> {
     const res = await this._get(id)
     if (res !== undefined) {
       return new ThreadMember(this.client, res)
@@ -21,11 +24,13 @@ export class ThreadMembersManager extends BaseManager<
   }
 
   /** Delete a Thread */
-  async delete(id: string | ThreadChannel): Promise<boolean> {
-    return this.client.rest.delete(CHANNEL(typeof id === 'string' ? id : id.id))
+  override async delete(id: string | ThreadChannel): Promise<boolean> {
+    return await this.client.rest.delete(
+      CHANNEL(typeof id === 'string' ? id : id.id)
+    )
   }
 
-  async array(): Promise<ThreadMember[]> {
+  override async array(): Promise<ThreadMember[]> {
     const arr = await (this.client.cache.array(
       this.cacheName
     ) as ThreadMemberPayload[])

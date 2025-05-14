@@ -1,6 +1,6 @@
-import { ICacheAdapter } from './adapter.ts'
+import type { ICacheAdapter } from './adapter.ts'
 // Not in deps.ts to allow optional dep loading
-import { createClient, RedisClientOptions } from 'npm:redis@4.6.13'
+import { createClient, type RedisClientOptions } from 'npm:redis@4.6.13'
 
 /** Redis Cache Adapter for using Redis as a cache-provider. */
 export class RedisCacheAdapter implements ICacheAdapter {
@@ -54,7 +54,7 @@ export class RedisCacheAdapter implements ICacheAdapter {
     if (cache === undefined) return
     try {
       return JSON.parse(cache) as T
-    } catch (e) {
+    } catch {
       return cache as unknown as T
     }
   }
@@ -69,7 +69,7 @@ export class RedisCacheAdapter implements ICacheAdapter {
     await this.redis?.hSet(
       cacheName,
       key,
-      typeof value === 'object' ? JSON.stringify(value) : (value as any)
+      typeof value === 'object' ? JSON.stringify(value) : (value as string)
     )
     if (expire !== undefined) {
       await this.redis?.hSet(

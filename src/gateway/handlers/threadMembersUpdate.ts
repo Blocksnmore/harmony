@@ -1,7 +1,7 @@
 import type { Gateway, GatewayEventHandler } from '../mod.ts'
 import type { ThreadMemberPayload } from '../../types/channel.ts'
 import { Collection } from '../../utils/collection.ts'
-import { ThreadMember } from '../../structures/threadChannel.ts'
+import type { ThreadMember } from '../../structures/threadChannel.ts'
 
 export const threadMembersUpdate: GatewayEventHandler = async (
   gateway: Gateway,

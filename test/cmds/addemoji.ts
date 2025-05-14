@@ -1,4 +1,4 @@
-import { Command, CommandContext } from '../../mod.ts'
+import { Command, type CommandContext } from '../../mod.ts'
 
 export default class AddEmojiCommand extends Command {
   name = 'addemoji'
@@ -6,7 +6,7 @@ export default class AddEmojiCommand extends Command {
   args = 2
   guildOnly = true
 
-  execute(ctx: CommandContext): any {
+  execute(ctx: CommandContext): unknown {
     const name = ctx.args[0]
     if (name === undefined) return ctx.message.reply('No name was given!')
     const url = ctx.argString.slice(name.length).trim()

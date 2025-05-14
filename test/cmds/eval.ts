@@ -1,4 +1,4 @@
-import { Command, CommandContext } from '../../mod.ts'
+import { Command, type CommandContext } from '../../mod.ts'
 
 export default class EvalCommand extends Command {
   name = 'eval'
@@ -6,7 +6,6 @@ export default class EvalCommand extends Command {
 
   async execute(ctx: CommandContext): Promise<void> {
     try {
-      // eslint-disable-next-line no-eval
       let evaled = eval(ctx.argString)
       if (evaled instanceof Promise) evaled = await evaled
       if (typeof evaled === 'object') evaled = Deno.inspect(evaled)

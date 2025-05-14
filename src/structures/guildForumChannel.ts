@@ -1,6 +1,6 @@
-import { Client } from '../client/client.ts'
+import type { Client } from '../client/client.ts'
 import type { AllMessageOptions } from '../managers/channels.ts'
-import {
+import type {
   CreateThreadInForumPayload,
   GuildForumChannelPayload,
   GuildForumSortOrderTypes,
@@ -13,7 +13,7 @@ import { CHANNEL } from '../types/endpoint.ts'
 import { transformComponent } from '../utils/components.ts'
 import { Embed } from './embed.ts'
 import { Emoji } from './emoji.ts'
-import { Guild } from './guild.ts'
+import type { Guild } from './guild.ts'
 import { GuildThreadAvailableChannel } from './guildThreadAvailableChannel.ts'
 import { Message } from './message.ts'
 import { ThreadChannel } from './threadChannel.ts'

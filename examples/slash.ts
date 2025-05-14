@@ -3,7 +3,7 @@ import {
   GatewayIntents,
   event,
   slash,
-  ApplicationCommandInteraction,
+  type ApplicationCommandInteraction,
   ApplicationCommandOptionType,
   isBotInVoiceChannel,
   isUserInVoiceChannel,

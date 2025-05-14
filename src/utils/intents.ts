@@ -2,7 +2,6 @@ import { GatewayIntents } from '../types/gateway.ts'
 
 export type PrivilegedIntents = 'GUILD_MEMBERS' | 'GUILD_PRESENCES'
 
-/* eslint-disable @typescript-eslint/no-extraneous-class */
 /** Utility class for handling Gateway Intents */
 export class Intents {
   static NonPrivileged: number[] = [

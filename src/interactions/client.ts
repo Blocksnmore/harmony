@@ -1,21 +1,21 @@
 import {
   ApplicationCommandInteraction,
-  InteractionApplicationCommandResolved
+  type InteractionApplicationCommandResolved
 } from '../structures/applicationCommand.ts'
 import { Interaction, InteractionChannel } from '../structures/interactions.ts'
 import {
-  InteractionPayload,
-  InteractionResponsePayload,
+  type InteractionPayload,
+  type InteractionResponsePayload,
   InteractionType
 } from '../types/interactions.ts'
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
-  InteractionApplicationCommandData
+  type InteractionApplicationCommandData
 } from '../types/applicationCommand.ts'
 import type { Client } from '../client/mod.ts'
 import { RESTManager } from '../rest/mod.ts'
-import { ApplicationCommandsModule } from './commandModule.ts'
+import type { ApplicationCommandsModule } from './commandModule.ts'
 import { edverify, decodeHex, readAll } from '../../deps.ts'
 import { User } from '../structures/user.ts'
 import { HarmonyEventEmitter } from '../utils/events.ts'
@@ -24,19 +24,20 @@ import { ApplicationCommandsManager } from './applicationCommand.ts'
 import { Application } from '../structures/application.ts'
 import { Member } from '../structures/member.ts'
 import { Guild } from '../structures/guild.ts'
-import { GuildPayload } from '../types/guild.ts'
+import type { GuildPayload } from '../types/guild.ts'
 import { Channel } from '../structures/channel.ts'
-import { TextChannel } from '../structures/textChannel.ts'
+import type { TextChannel } from '../structures/textChannel.ts'
 import { Role } from '../structures/role.ts'
 import { Message } from '../structures/message.ts'
 import { MessageComponentInteraction } from '../structures/messageComponents.ts'
 import { AutocompleteInteraction } from '../structures/autocompleteInteraction.ts'
 import { ModalSubmitInteraction } from '../structures/modalSubmitInteraction.ts'
 import { MessageComponentType } from '../types/messageComponents.ts'
+import type { ApplicationPayload } from '../../mod.ts'
 
 export type ApplicationCommandHandlerCallback = (
   interaction: ApplicationCommandInteraction
-) => any // Any to include both sync and async return types
+) => unknown // Any to include both sync and async return types
 
 export interface ApplicationCommandHandler {
   name: string
@@ -51,8 +52,10 @@ export interface ApplicationCommandHandler {
 export type { ApplicationCommandHandlerCallback as SlashCommandHandlerCallback }
 export type { ApplicationCommandHandler as SlashCommandHandler }
 
-export type AutocompleteHandlerCallback = (d: AutocompleteInteraction) => any
-export type ComponentInteractionCallback<T> = (d: T) => any
+export type AutocompleteHandlerCallback = (
+  d: AutocompleteInteraction
+) => unknown
+export type ComponentInteractionCallback<T> = (d: T) => unknown
 
 export interface AutocompleteHandler {
   cmd: string
@@ -79,7 +82,6 @@ export interface SlashOptions {
   publicKey?: string
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type InteractionsClientEvents = {
   interaction: [Interaction]
   interactionError: [Error]
@@ -348,7 +350,6 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
       const parentMatched = hasGroupOrParent ? e.parent === i.name : true
       const nameMatched = hasGroupOrParent ? parentMatched : nameMatched1
       const optionMatched =
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         i.options.some((o) => o.name === e.option && o.focused) ||
         e.option === '*'
 
@@ -404,7 +405,6 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
 
     await this.emit('interaction', interaction)
 
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (interaction.isAutocomplete()) {
       const handle =
         this._getAutocompleteHandler(interaction) ??
@@ -420,7 +420,6 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
       return
     }
 
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (interaction.isMessageComponent()) {
       const handle =
         this._getComponentHandler(interaction) ??
@@ -437,7 +436,6 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
       return
     }
 
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (interaction.isModalSubmit()) {
       const handle =
         this._getModalSubmitHandler(interaction) ??
@@ -454,7 +452,6 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
       return
     }
 
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!interaction.isApplicationCommand()) return
 
     const cmd =
@@ -543,8 +540,7 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
 
       const guild =
         payload.guild_id !== undefined
-          ? // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-            new Guild(client, {
+          ? new Guild(client, {
               id: payload.guild_id!,
               unavailable: true
             } as GuildPayload)
@@ -552,8 +548,7 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
 
       const member =
         payload.member !== undefined
-          ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-            new Member(client, payload.member, user, guild!)
+          ? new Member(client, payload.member, user, guild!)
           : undefined
 
       if (
@@ -569,7 +564,6 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
         }
 
         for (const [id, data] of Object.entries(
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           (payload.data as InteractionApplicationCommandData).resolved?.users ??
             {}
         )) {
@@ -577,7 +571,6 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
         }
 
         for (const [id, data] of Object.entries(
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           (payload.data as InteractionApplicationCommandData).resolved
             ?.members ?? {}
         )) {
@@ -590,7 +583,6 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
         }
 
         for (const [id, data] of Object.entries(
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           (payload.data as InteractionApplicationCommandData).resolved?.roles ??
             {}
         )) {
@@ -598,7 +590,6 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
         }
 
         for (const [id, data] of Object.entries(
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           (payload.data as InteractionApplicationCommandData).resolved
             ?.channels ?? {}
         )) {
@@ -606,7 +597,6 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
         }
 
         for (const [id, data] of Object.entries(
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           (payload.data as InteractionApplicationCommandData).resolved
             ?.messages ?? {}
         )) {
@@ -676,7 +666,7 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
       await this.emit('interaction', res)
 
       return res
-    } catch (e) {
+    } catch {
       return false
     }
   }
@@ -786,8 +776,7 @@ export class InteractionsClient extends HarmonyEventEmitter<InteractionsClientEv
   /** Fetch Application of the Client (if Token is present) */
   async fetchApplication(): Promise<Application> {
     const app = await this.rest.api.oauth2.applications['@me'].get()
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    return new Application(this.client!, app)
+    return new Application(this.client!, app as ApplicationPayload)
   }
 }
 

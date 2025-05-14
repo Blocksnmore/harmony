@@ -1,37 +1,37 @@
 import type { Client } from '../client/mod.ts'
-import {
+import type {
+  AuditLog,
+  AuditLogEntry,
+  AuditLogEntryPayload,
+  AuditLogEvents,
+  ContentFilter,
   GuildBanPayload,
+  GuildBeginPrunePayload,
+  GuildChannels,
   GuildFeatures,
+  GuildGetPruneCountPayload,
   GuildIntegrationPayload,
+  GuildModifyOptions,
   GuildPayload,
+  GuildPreview,
+  GuildPruneCountPayload,
   GuildWidgetPayload,
   IntegrationAccountPayload,
   IntegrationExpireBehavior,
-  Verification,
-  GuildChannels,
-  GuildPreview,
   MessageNotification,
-  ContentFilter,
-  GuildModifyOptions,
-  GuildGetPruneCountPayload,
-  GuildPruneCountPayload,
-  GuildBeginPrunePayload,
-  AuditLog,
-  AuditLogEvents,
-  AuditLogEntryPayload,
-  AuditLogEntry
+  Verification
 } from '../types/guild.ts'
 import { Base, SnowflakeBase } from './base.ts'
-import { CreateGuildRoleOptions, RolesManager } from '../managers/roles.ts'
+import { type CreateGuildRoleOptions, RolesManager } from '../managers/roles.ts'
 import { InviteManager } from '../managers/invites.ts'
 import {
-  CreateChannelOptions,
+  type CreateChannelOptions,
   GuildChannelsManager
 } from '../managers/guildChannels.ts'
 import { MembersManager } from '../managers/members.ts'
 import { Role } from './role.ts'
 import { GuildEmojisManager } from '../managers/guildEmojis.ts'
-import { Member } from './member.ts'
+import type { Member } from './member.ts'
 import { User } from './user.ts'
 import { Application } from './application.ts'
 import {
@@ -84,8 +84,9 @@ export class GuildBans extends Base {
    */
   async all(): Promise<GuildBan[]> {
     const res = await this.client.rest.get(GUILD_BANS(this.guild.id))
-    if (typeof res !== 'object' || !Array.isArray(res))
+    if (typeof res !== 'object' || !Array.isArray(res)) {
       throw new Error('Failed to fetch Guild Bans')
+    }
 
     const bans = (res as GuildBanPayload[]).map(
       (ban) => new GuildBan(this.client, ban, this.guild)
@@ -102,7 +103,7 @@ export class GuildBans extends Base {
       GUILD_BAN(this.guild.id, typeof user === 'string' ? user : user.id)
     )
     if (typeof res !== 'object') throw new Error('Failed to fetch Guild Ban')
-    return new GuildBan(this.client, res, this.guild)
+    return new GuildBan(this.client, res as GuildBanPayload, this.guild)
   }
 
   /**
@@ -116,7 +117,7 @@ export class GuildBans extends Base {
     reason?: string,
     deleteMessagesDays?: number
   ): Promise<void> {
-    const res = await this.client.rest.put(
+    const res = (await this.client.rest.put(
       GUILD_BAN(this.guild.id, typeof user === 'string' ? user : user.id),
       {
         delete_message_days: deleteMessagesDays
@@ -125,7 +126,7 @@ export class GuildBans extends Base {
       null,
       true,
       { reason }
-    )
+    )) as { response: { status: number } }
     if (res.response.status !== 204) throw new Error('Failed to Add Guild Ban')
   }
 
@@ -337,7 +338,6 @@ export class Guild extends SnowflakeBase {
    * Gets Everyone role of the Guild
    */
   async getEveryoneRole(): Promise<Role> {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return (await this.roles.get(this.id)) as Role
   }
 
@@ -362,12 +362,12 @@ export class Guild extends SnowflakeBase {
 
   /** Create a new Guild Channel */
   async createChannel(options: CreateChannelOptions): Promise<GuildChannels> {
-    return this.channels.create(options)
+    return await this.channels.create(options)
   }
 
   /** Create a new Guild Role */
   async createRole(options?: CreateGuildRoleOptions): Promise<Role> {
-    return this.roles.create(options)
+    return await this.roles.create(options)
   }
 
   /**
@@ -381,7 +381,7 @@ export class Guild extends SnowflakeBase {
     wait: boolean = false,
     timeout: number = 60000
   ): Promise<Guild> {
-    return await new Promise((resolve, reject) => {
+    return await new Promise((resolve) => {
       this.client.shards.get(this.shardID)?.requestMembers(this.id, options)
       if (!wait) return resolve(this)
       else {
@@ -461,7 +461,9 @@ export class Guild extends SnowflakeBase {
 
   /** Returns the widget for the guild. */
   async getWidget(): Promise<GuildWidgetPayload> {
-    return this.client.rest.api.guilds[this.id]['widget.json'].get()
+    return (await this.client.rest.api.guilds[this.id][
+      'widget.json'
+    ].get()) as GuildWidgetPayload
   }
 
   /** Modify a guild widget object for the guild. */
@@ -483,7 +485,7 @@ export class Guild extends SnowflakeBase {
       const value = await this.client.rest.api.guilds[this.id][
         'vanity-url'
       ].get()
-      return value
+      return value as { code: string | null; uses: number }
     } catch (error) {
       if (error instanceof DiscordAPIError) {
         if (error.error?.code === 50020) {
@@ -514,11 +516,12 @@ export class Guild extends SnowflakeBase {
 
   /** Returns an array of template objects. */
   async getTemplates(): Promise<Template[]> {
-    return this.client.rest.api.guilds[this.id].templates
+    return await this.client.rest.api.guilds[this.id].templates
       .get()
-      .then((temps: TemplatePayload[]) =>
-        temps.map((temp) => new Template(this.client, temp))
-      )
+      .then((temps) => {
+        const templates = temps as TemplatePayload[]
+        return templates.map((temp) => new Template(this.client, temp))
+      })
   }
 
   /** Creates a template for the guild. */
@@ -530,7 +533,7 @@ export class Guild extends SnowflakeBase {
       name,
       description
     })
-    return new Template(this.client, payload)
+    return new Template(this.client, payload as TemplatePayload)
   }
 
   /** Syncs the template to the guild's current state. */
@@ -538,7 +541,7 @@ export class Guild extends SnowflakeBase {
     const payload = await this.client.rest.api.guilds[this.id].templates[
       code
     ].put()
-    return new Template(this.client, payload)
+    return new Template(this.client, payload as TemplatePayload)
   }
 
   /** Modifies the template's metadata. */
@@ -549,7 +552,7 @@ export class Guild extends SnowflakeBase {
     const payload = await this.client.rest.api.guilds[this.id].templates[
       code
     ].patch({ name: data.name, description: data.description })
-    return new Template(this.client, payload)
+    return new Template(this.client, payload as TemplatePayload)
   }
 
   /** Deletes the template. Requires the MANAGE_GUILD permission. */
@@ -560,7 +563,7 @@ export class Guild extends SnowflakeBase {
 
   /** Gets a preview of the guild. Returns GuildPreview. */
   async preview(): Promise<GuildPreview> {
-    return this.client.guilds.preview(this.id)
+    return await this.client.guilds.preview(this.id)
   }
 
   /**
@@ -592,14 +595,13 @@ export class Guild extends SnowflakeBase {
         .join(',')
     }
 
-    const result: GuildPruneCountPayload = await this.client.rest.get(
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+    const result: GuildPruneCountPayload = (await this.client.rest.get(
       GUILD_PRUNE(this.id) +
         '?' +
         Object.entries(query)
           .map(([key, value]) => `${key}=${value}`)
           .join('&')
-    )
+    )) as GuildPruneCountPayload
 
     return result.pruned as number
   }
@@ -627,10 +629,10 @@ export class Guild extends SnowflakeBase {
       )
     }
 
-    const result: GuildPruneCountPayload = await this.client.rest.post(
+    const result: GuildPruneCountPayload = (await this.client.rest.post(
       GUILD_PRUNE(this.id),
       body
-    )
+    )) as GuildPruneCountPayload
 
     return result.pruned
   }
@@ -646,8 +648,9 @@ export class Guild extends SnowflakeBase {
     if (
       typeof options.limit === 'number' &&
       (options.limit < 1 || options.limit > 100)
-    )
+    ) {
       throw new Error('Invalid limit, must be between 1-100')
+    }
 
     const data = await this.client.rest.endpoints.getGuildAuditLog(this.id, {
       userId: typeof options.user === 'object' ? options.user.id : options.user,
@@ -735,5 +738,5 @@ export class GuildIntegration extends Base {
 export function transformAuditLogEntryPayload(
   d: AuditLogEntryPayload
 ): AuditLogEntry {
-  return toCamelCase(d)
+  return toCamelCase(d) as AuditLogEntry
 }

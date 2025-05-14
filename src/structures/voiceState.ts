@@ -56,7 +56,7 @@ export class VoiceState extends Base {
    * Disconnects a Member from connected VC
    */
   async disconnect(): Promise<Member | undefined> {
-    const result = this.member?.disconnectVoice()
+    const result = await this.member?.disconnectVoice()
     if (result !== undefined) {
       this.channelID = null
       this.channel = null
@@ -98,7 +98,7 @@ export class VoiceState extends Base {
    * @param mute Value to set
    */
   async setMute(mute?: boolean): Promise<Member | undefined> {
-    return this.member?.setMute(mute)
+    return await this.member?.setMute(mute)
   }
 
   /**
@@ -106,7 +106,7 @@ export class VoiceState extends Base {
    * @param deaf Value to set
    */
   async setDeaf(deaf?: boolean): Promise<Member | undefined> {
-    return this.member?.setDeaf(deaf)
+    return await this.member?.setDeaf(deaf)
   }
 
   /**

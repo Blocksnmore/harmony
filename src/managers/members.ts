@@ -40,17 +40,17 @@ export class MembersManager extends BaseManager<MemberPayload, Member> {
     return res
   }
 
-  async set(id: string, payload: MemberPayload): Promise<void> {
+  override async set(id: string, payload: MemberPayload): Promise<void> {
     await this.client.users.set(payload.user.id, payload.user)
     await super.set(id, payload)
   }
 
-  async array(): Promise<Member[]> {
+  override async array(): Promise<Member[]> {
     let arr = await (this.client.cache.array(this.cacheName) as MemberPayload[])
     if (arr === undefined) arr = []
     const roles = await this.guild.roles.array()
     return await Promise.all(
-      arr.map(async (raw) => {
+      arr.map((raw) => {
         const user = new User(this.client, raw.user)
         let permissions = new Permissions(Permissions.DEFAULT)
         if (roles !== undefined) {

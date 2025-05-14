@@ -1,19 +1,24 @@
 import {
-  CommandClient,
-  event,
-  Intents,
-  command,
-  subslash,
-  groupslash,
-  CommandContext,
-  Extension,
+  type ApplicationCommandInteraction,
   Collection,
-  GuildTextChannel,
+  command,
+  CommandClient,
+  type CommandContext,
+  event,
+  Extension,
+  groupslash,
+  type GuildTextChannel,
+  Intents,
   slash,
-  ApplicationCommandInteraction
+  subslash
 } from '../mod.ts'
 import { LL_IP, LL_PASS, LL_PORT, TOKEN } from './config.ts'
-import { Manager, Player } from 'https://deno.land/x/lavadeno/mod.ts'
+import {
+  Manager,
+  type Player,
+  type VoiceServer,
+  type VoiceState
+} from 'https://deno.land/x/lavadeno@2.1.1/mod.ts'
 // import { ApplicationCommandOptionType } from '../types/applicationCommand.ts'
 
 export const nodes = [
@@ -34,11 +39,8 @@ class MyClient extends CommandClient {
       caseSensitive: false
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const client = this
-
     this.manager = new Manager(nodes, {
-      send(id, payload) {
+      send(_id, payload) {
         // Sharding not added yet
         client.gateway?.send(payload)
       }
@@ -51,9 +53,12 @@ class MyClient extends CommandClient {
       console.log(`${node.id} connected.`)
     )
 
-    this.on('raw', (evt: string, d: any) => {
-      if (evt === 'VOICE_SERVER_UPDATE') this.manager.serverUpdate(d)
-      else if (evt === 'VOICE_STATE_UPDATE') this.manager.stateUpdate(d)
+    this.on('raw', (evt: string, d: unknown) => {
+      if (evt === 'VOICE_SERVER_UPDATE') {
+        this.manager.serverUpdate(d as VoiceServer)
+      } else if (evt === 'VOICE_STATE_UPDATE') {
+        this.manager.stateUpdate(d as VoiceState)
+      }
     })
   }
 
@@ -68,9 +73,9 @@ class MyClient extends CommandClient {
   }
 
   @command()
-  rmrf(ctx: CommandContext): any {
+  rmrf(ctx: CommandContext): unknown {
     if (ctx.author.id !== '422957901716652033') return
-    ;(ctx.channel as any as GuildTextChannel)
+    ;(ctx.channel as unknown as GuildTextChannel)
       .bulkDelete(3)
       .then((chan) => {
         ctx.channel.send(`Bulk deleted 2 in ${chan}`)
@@ -84,7 +89,7 @@ class MyClient extends CommandClient {
   }
 
   @event()
-  raw(evt: string, d: any): void {
+  raw(evt: string, d: unknown): void {
     if (!evt.startsWith('APPLICATION')) return
     console.log(evt, d)
   }
@@ -146,18 +151,20 @@ class MyClient extends CommandClient {
 const players = new Collection<string, Player>()
 
 class VCExtension extends Extension {
-  name = 'VC'
-  subPrefix = 'vc'
+  override name = 'VC'
+  override subPrefix = 'vc'
 
   @command()
-  async join(ctx: CommandContext): Promise<any> {
-    if (players.has(ctx.guild?.id as string) === true)
+  async join(ctx: CommandContext): Promise<unknown> {
+    if (players.has(ctx.guild?.id as string) === true) {
       return ctx.message.reply(`Already playing in this server!`)
+    }
 
     ctx.argString = ctx.argString.slice(4).trim()
 
-    if (ctx.argString === '')
+    if (ctx.argString === '') {
       return ctx.message.reply('You gave nothing to search.')
+    }
 
     const userVS = await ctx.guild?.voiceStates.get(ctx.author.id)
     if (userVS === undefined) {
@@ -189,7 +196,7 @@ class VCExtension extends Extension {
   }
 
   @command()
-  async leave(ctx: CommandContext): Promise<any> {
+  async leave(ctx: CommandContext): Promise<unknown> {
     const userVS = await ctx.guild?.voiceStates.get(
       ctx.client.user?.id as unknown as string
     )
@@ -200,8 +207,9 @@ class VCExtension extends Extension {
     userVS.channel?.leave()
     ctx.message.reply(`Left VC channel - ${userVS.channel?.name}!`)
 
-    if (players.has(ctx.guild?.id as string) !== true)
+    if (players.has(ctx.guild?.id as string) !== true) {
       return ctx.message.reply('Not playing anything in this server.')
+    }
 
     const player = players.get(ctx.guild?.id as string) as unknown as Player
     await player.stop()
@@ -215,7 +223,9 @@ class VCExtension extends Extension {
 const client = new MyClient()
 
 client.on('raw', (e, d) => {
-  if (e === 'GUILD_MEMBER_ADD' || e === 'GUILD_MEMBER_UPDATE') console.log(e, d)
+  if (e === 'GUILD_MEMBER_ADD' || e === 'GUILD_MEMBER_UPDATE') {
+    console.log(e, d)
+  }
 })
 
 client.extensions.load(VCExtension)

@@ -1,11 +1,11 @@
 import { unzlib } from '../../deps.ts'
 import type { Client } from '../client/mod.ts'
-import { GatewayResponse } from '../types/gatewayResponse.ts'
+import type { GatewayResponse } from '../types/gatewayResponse.ts'
 import {
   GatewayOpcodes,
   GatewayCloseCodes,
-  IdentityPayload,
-  StatusUpdatePayload,
+  type IdentityPayload,
+  type StatusUpdatePayload,
   GatewayEvents
 } from '../types/gateway.ts'
 import { gatewayHandlers } from './handlers/mod.ts'
@@ -32,7 +32,6 @@ export interface VoiceStateOptions {
 export const RECONNECT_CODE = 3999
 export const DESTROY_REASON = 'harmony-destroy'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type GatewayTypedEvents = {
   [name in GatewayEvents]: [unknown]
 } & {
@@ -129,7 +128,6 @@ export class Gateway extends HarmonyEventEmitter<GatewayTypedEvents> {
           this.initialized = true
           this.enqueueIdentify(this.client.forceNewSession)
         } else {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
           this.sendResume()
         }
         break
@@ -297,7 +295,7 @@ export class Gateway extends HarmonyEventEmitter<GatewayTypedEvents> {
     }
   }
 
-  private async onerror(event: ErrorEvent): Promise<void> {
+  private onerror(event: ErrorEvent): void {
     const error = new Error(
       Deno.inspect({
         message: event.message,
@@ -408,7 +406,6 @@ export class Gateway extends HarmonyEventEmitter<GatewayTypedEvents> {
       op: GatewayOpcodes.REQUEST_GUILD_MEMBERS,
       d: {
         guild_id: guild,
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         query: options.users?.length ? undefined : options.query ?? '',
         limit: options.limit ?? 0,
         presences: options.presences,
@@ -480,7 +477,6 @@ export class Gateway extends HarmonyEventEmitter<GatewayTypedEvents> {
     const url = resume ? this._resumeGatewayURL : Constants.DISCORD_GATEWAY_URL
     this._resumeGatewayURL = undefined
     this.websocket = new WebSocket(
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       `${url}/?v=${Constants.DISCORD_API_VERSION}&encoding=json`,
       []
     )
@@ -562,7 +558,6 @@ export class Gateway extends HarmonyEventEmitter<GatewayTypedEvents> {
     } else {
       this.debug('Found dead connection, reconnecting...')
       clearInterval(this.heartbeatIntervalID)
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this.reconnect(false)
       return
     }
@@ -573,4 +568,4 @@ export class Gateway extends HarmonyEventEmitter<GatewayTypedEvents> {
 
 // There's a lot of not assignable errors and all when using unknown,
 // so I'll stick with any here.
-export type GatewayEventHandler = (gateway: Gateway, d: any) => void
+export type GatewayEventHandler<T = unknown> = (gateway: Gateway, d: T) => void

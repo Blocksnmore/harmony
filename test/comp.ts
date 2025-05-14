@@ -1,11 +1,7 @@
-// I hate linter
-/* eslint-disable */
-
 import {
-  ButtonStyle,
+  type ApplicationCommandPartial,
   Client,
-  MessageComponents,
-  ApplicationCommandPartial
+  MessageComponents
 } from '../mod.ts'
 import { MessageComponentType } from '../src/types/messageComponents.ts'
 import { TOKEN } from './config.ts'
@@ -136,10 +132,10 @@ const GUILD = '837903552570720307'
 const current = await client.interactions.commands.guild(GUILD)
 
 await client.interactions.commands.bulkEdit(
-  commands.map((e: any) => {
+  commands.map((e) => {
     let c
-    if ((c = current.find((c) => c.id === e.id))) {
-      e.id = c.id
+    if ((c = current.find((c) => c.name === e.name))) {
+      e.name = c.name
     }
     return e
   }),

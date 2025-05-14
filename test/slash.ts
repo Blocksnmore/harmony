@@ -4,12 +4,12 @@ import {
   event,
   slash,
   messageComponent,
-  MessageComponentInteraction,
-  SlashCommandInteraction,
+  type MessageComponentInteraction,
+  type SlashCommandInteraction,
   modalHandler,
-  ModalSubmitInteraction
+  type ModalSubmitInteraction
 } from '../mod.ts'
-import { ApplicationCommandInteraction } from '../src/structures/applicationCommand.ts'
+import type { ApplicationCommandInteraction } from '../src/structures/applicationCommand.ts'
 import { ApplicationCommandOptionType as Type } from '../src/types/applicationCommand.ts'
 import { TOKEN, GUILD } from './config.ts'
 
@@ -145,7 +145,7 @@ export class MyClient extends Client {
     d.reply('Working as intented')
   }
 
-  @event() raw(evt: string, d: any): void {
+  @event() raw(evt: string, d: unknown): void {
     if (evt === 'INTERACTION_CREATE') console.log(evt, d?.data?.resolved)
   }
 }

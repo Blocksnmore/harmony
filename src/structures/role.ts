@@ -6,12 +6,12 @@ import type { Guild } from './guild.ts'
 import type { Member } from './member.ts'
 import { User } from './user.ts'
 import { ImageURL } from './cdn.ts'
-import { ImageFormats, ImageSize } from '../types/cdn.ts'
+import type { ImageFormats, ImageSize } from '../types/cdn.ts'
 import { ROLE_ICON } from '../types/endpoint.ts'
 
 /** Represents a Guild Role */
 export class Role extends SnowflakeBase {
-  id: string
+  override id: string
   guild: Guild
   name!: string
   color!: number
@@ -57,12 +57,12 @@ export class Role extends SnowflakeBase {
 
   /** Delete the Role */
   async delete(): Promise<Role | undefined> {
-    return this.guild.roles.delete(this)
+    return await this.guild.roles.delete(this)
   }
 
   /** Edit the Role */
   async edit(options: RoleModifyPayload): Promise<Role> {
-    return this.guild.roles.edit(this, options)
+    return await this.guild.roles.edit(this, options)
   }
 
   /** Add the Role to a Member */

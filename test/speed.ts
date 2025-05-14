@@ -7,9 +7,6 @@ const client = new discord.Client({
   shardCount: 20
 })
 
-// eslint-disable-next-line prefer-const
-let started: number
-
 client.on('shardReady', (shard) => {
   console.log(`Shard ${shard} ready!`)
 })
@@ -20,5 +17,5 @@ client.once('ready', (shards) => {
 
 console.log('Connecting...')
 
-started = performance.now()
+const started = performance.now()
 client.connect()

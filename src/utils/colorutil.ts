@@ -182,7 +182,6 @@ export interface Colors {
   yellowgreen: number
 }
 
-// eslint-disable-next-line
 export class ColorUtil {
   constructor() {
     throw new Error(
@@ -247,7 +246,7 @@ export class ColorUtil {
    * @param color The color name
    */
   static resolveColor(color?: keyof Colors | 'RANDOM'): number {
-    if (!color) return 0 // eslint-disable-line
+    if (!color) return 0
     if (color === 'RANDOM') return Math.floor(Math.random() * (0xffffff + 1))
     return ColorUtil.colorList[color]
   }

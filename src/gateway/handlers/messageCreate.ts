@@ -12,7 +12,6 @@ export const messageCreate: GatewayEventHandler = async (
   // Fetch the channel if not cached.
   // Commented out right now as it causes some undefined behavior.
   // if (channel === undefined)
-  //   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   //   channel = (await gateway.client.channels.fetch(d.channel_id)) as TextChannel
   if (channel === undefined) {
     if (d.guild_id === undefined) {

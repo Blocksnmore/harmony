@@ -1,7 +1,7 @@
 import type { Client } from '../client/mod.ts'
 import type { MessagePayload } from '../types/channel.ts'
 import { Collection } from '../utils/collection.ts'
-import { GuildTextBasedChannel } from './guildTextChannel.ts'
+import type { GuildTextBasedChannel } from './guildTextChannel.ts'
 import type { Message } from './message.ts'
 import type { Role } from './role.ts'
 import { User } from './user.ts'

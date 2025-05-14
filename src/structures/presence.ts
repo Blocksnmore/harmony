@@ -1,11 +1,14 @@
-import {
+import type {
   ActivityGame,
   ActivityPayload,
   ClientActivity,
   ClientStatus,
   StatusType
 } from '../types/presence.ts'
-import { PresenceUpdatePayload, StatusUpdatePayload } from '../types/gateway.ts'
+import type {
+  PresenceUpdatePayload,
+  StatusUpdatePayload
+} from '../types/gateway.ts'
 import { Base } from './base.ts'
 import type { Guild } from './guild.ts'
 import type { User } from './user.ts'
@@ -113,7 +116,6 @@ export class ClientPresence {
 
   /** Creates Activity Payload */
   createActivity(): ActivityGame[] | null {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const activity =
       this.activity === undefined
         ? null

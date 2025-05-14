@@ -9,7 +9,7 @@ import type {
   EmbedTypes,
   EmbedVideo
 } from '../types/channel.ts'
-import { Colors, ColorUtil } from '../utils/colorutil.ts'
+import { type Colors, ColorUtil } from '../utils/colorutil.ts'
 import type { MessageAttachment } from './message.ts'
 
 /** Message Embed Object */

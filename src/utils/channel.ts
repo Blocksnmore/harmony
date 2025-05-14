@@ -1,31 +1,31 @@
-import { Client } from '../client/mod.ts'
+import type { Client } from '../client/mod.ts'
 import {
-  ChannelPayload,
+  type ChannelPayload,
   ChannelTypes,
-  DMChannelPayload,
-  GroupDMChannelPayload,
-  GuildCategoryChannelPayload,
-  GuildForumChannelPayload,
-  GuildNewsChannelPayload,
-  GuildStageChannelPayload,
-  GuildTextBasedChannelPayload,
-  GuildTextChannelPayload,
-  GuildVoiceChannelPayload,
-  TextChannelPayload,
-  ThreadChannelPayload
+  type DMChannelPayload,
+  type GroupDMChannelPayload,
+  type GuildCategoryChannelPayload,
+  type GuildForumChannelPayload,
+  type GuildNewsChannelPayload,
+  type GuildStageChannelPayload,
+  type GuildTextBasedChannelPayload,
+  type GuildTextChannelPayload,
+  type GuildVoiceChannelPayload,
+  type TextChannelPayload,
+  type ThreadChannelPayload
 } from '../types/channel.ts'
 import { DMChannel } from '../structures/dmChannel.ts'
 import { GroupDMChannel } from '../structures/groupChannel.ts'
 import { CategoryChannel } from '../structures/guildCategoryChannel.ts'
 import {
-  GuildTextBasedChannel,
+  type GuildTextBasedChannel,
   GuildTextChannel
 } from '../structures/guildTextChannel.ts'
 import { NewsChannel } from '../structures/guildNewsChannel.ts'
 import { VoiceChannel } from '../structures/guildVoiceChannel.ts'
-import { Guild } from '../structures/guild.ts'
-import { TextChannel } from '../structures/textChannel.ts'
-import { Channel, GuildChannel } from '../structures/channel.ts'
+import type { Guild } from '../structures/guild.ts'
+import type { TextChannel } from '../structures/textChannel.ts'
+import type { Channel, GuildChannel } from '../structures/channel.ts'
 import { StoreChannel } from '../structures/guildStoreChannel.ts'
 import { StageVoiceChannel } from '../structures/guildStageVoiceChannel.ts'
 import { ThreadChannel } from '../structures/threadChannel.ts'

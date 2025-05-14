@@ -1,4 +1,4 @@
-import { Command, CommandContext } from '../../mod.ts'
+import { Command, type CommandContext } from '../../mod.ts'
 
 export default class PingCommand extends Command {
   name = 'ping'

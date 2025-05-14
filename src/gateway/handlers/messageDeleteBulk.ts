@@ -13,7 +13,6 @@ export const messageDeleteBulk: GatewayEventHandler = async (
   )
   // Fetch the channel if not cached
   // if (channel === undefined)
-  //   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   //   channel = (await gateway.client.channels.fetch(
   //     d.channel_id
   //   )) as GuildTextBasedChannel

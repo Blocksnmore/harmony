@@ -1,7 +1,7 @@
 import type { Client } from '../client/mod.ts'
-import { Guild } from '../structures/guild.ts'
+import type { Guild } from '../structures/guild.ts'
 import type { CategoryChannel } from '../structures/guildCategoryChannel.ts'
-import {
+import type {
   ChannelTypes,
   GuildChannelPayload,
   OverwritePayload
@@ -39,13 +39,13 @@ export class GuildChannelsManager extends BaseChildManager<
     this.guild = guild
   }
 
-  async get(id: string): Promise<GuildChannels | undefined> {
+  override async get(id: string): Promise<GuildChannels | undefined> {
     const res = await this.parent.get(id)
     if (res !== undefined && res.guild.id === this.guild.id) return res
     else return undefined
   }
 
-  async size(): Promise<number> {
+  override async size(): Promise<number> {
     return (
       (await this.client.cache.size(
         this.parent.cacheName,
@@ -55,11 +55,11 @@ export class GuildChannelsManager extends BaseChildManager<
   }
 
   /** Delete a Guild Channel */
-  async delete(id: string): Promise<boolean> {
-    return this.client.rest.delete(CHANNEL(id))
+  override async delete(id: string): Promise<boolean> {
+    return await this.client.rest.delete<boolean>(CHANNEL(id))
   }
 
-  async array(): Promise<GuildChannels[]> {
+  override async array(): Promise<GuildChannels[]> {
     const arr = await this.parent.array()
     return arr.filter(
       (c) => c.guild !== undefined && c.guild.id === this.guild.id

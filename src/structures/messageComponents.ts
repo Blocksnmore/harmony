@@ -1,24 +1,24 @@
 import {
   ButtonStyle,
-  InteractionMessageComponentData,
-  MessageComponentData,
+  type InteractionMessageComponentData,
+  type MessageComponentData,
   MessageComponentType,
-  ButtonComponent,
-  SelectComponent,
-  TextInputComponent
+  type ButtonComponent,
+  type SelectComponent,
+  type TextInputComponent
 } from '../types/messageComponents.ts'
-import { Interaction, InteractionMessageOptions } from './interactions.ts'
+import { Interaction, type InteractionMessageOptions } from './interactions.ts'
 import type { Client } from '../client/mod.ts'
 import {
-  InteractionPayload,
+  type InteractionPayload,
   InteractionResponseType
 } from '../types/interactions.ts'
 import type { Guild } from './guild.ts'
 import type { GuildTextChannel } from './guildTextChannel.ts'
 import type { Member } from './member.ts'
 import type { TextChannel } from './textChannel.ts'
-import { User } from './user.ts'
-import { Message } from './message.ts'
+import type { User } from './user.ts'
+import type { Message } from './message.ts'
 
 export class MessageComponents extends Array<MessageComponentData> {
   row(cb: (builder: MessageComponents) => unknown): this {
@@ -82,9 +82,7 @@ export class MessageComponentInteraction extends Interaction {
     }
   ) {
     super(client, data, others)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     this.data = data.data as InteractionMessageComponentData
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     this.message = others.message!
   }
 

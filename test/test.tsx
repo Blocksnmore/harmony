@@ -9,8 +9,8 @@
  */
 import {
   Client,
-  BotUI,
-  fragment,
+  type BotUI,
+  type fragment,
   ActionRow,
   Button,
   InteractionResponseType
@@ -39,7 +39,6 @@ client.on('messageCreate', (msg) => {
 
 client.on('interactionCreate', (d) => {
   // disabling linter because if i add === true then type guard doesn't work
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (d.isMessageComponent()) {
     if (d.customID === 'cookie') {
       d.respond({

@@ -1,13 +1,13 @@
 import {
   Client,
-  Message,
-  Member,
-  GuildChannels,
+  type Message,
+  type Member,
+  type GuildChannels,
   Embed,
-  Guild,
-  EveryChannelTypes,
+  type Guild,
+  type EveryChannelTypes,
   ChannelTypes,
-  GuildTextChannel,
+  type GuildTextChannel,
   Permissions,
   Collector,
   MessageAttachment,
@@ -134,7 +134,6 @@ client.on('messageCreate', async (msg: Message) => {
       .join('\n') as string
     msg.channel.send('Top 5 Message List:\n' + data)
   } else if (msg.content === '!editChannel') {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const channel = msg.channel as GuildTextChannel
     const newChannel = await channel.edit({
       name: 'gggg'
@@ -218,13 +217,10 @@ client.on('messageCreate', async (msg: Message) => {
     if (typeof vs !== 'object') return
     vs.channel?.join()
   } else if (msg.content === '!getOverwrites') {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!isGuildBasedTextChannel(msg.channel)) {
       return msg.channel.send("This isn't a guild text channel!")
     }
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const overwrites = await (msg.channel as GuildTextChannel).overwritesFor(
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       msg.member as Member
     )
     msg.channel.send(
@@ -241,16 +237,11 @@ client.on('messageCreate', async (msg: Message) => {
     if (msg.channel.type !== ChannelTypes.GUILD_TEXT) {
       return msg.channel.send("This isn't a guild text channel!")
     }
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const permissions = await (
       msg.channel as unknown as GuildTextChannel
-    ).permissionsFor(
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      msg.member as Member
-    )
+    ).permissionsFor(msg.member as Member)
     msg.channel.send(`Your permissions:\n${permissions.toArray().join('\n')}`)
   } else if (msg.content === '!addBasicOverwrites') {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!isGuildBasedTextChannel(msg.channel)) {
       return msg.channel.send("This isn't a guild text channel!")
     }
@@ -262,7 +253,6 @@ client.on('messageCreate', async (msg: Message) => {
       msg.channel.send(`Done!`)
     }
   } else if (msg.content === '!updateBasicOverwrites') {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!isGuildBasedTextChannel(msg.channel)) {
       return msg.channel.send("This isn't a guild text channel!")
     }
@@ -377,10 +367,9 @@ client.on('messageCreate', async (msg: Message) => {
   }
 })
 
-client.on('messageReactionRemove', (reaction, user) => {
+client.on('messageReactionRemove', (reaction) => {
   const msg = reaction.message
 
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (reaction.me && reaction.emoji.getEmojiString === '🤔') {
     msg.removeReaction(reaction.emoji)
   }

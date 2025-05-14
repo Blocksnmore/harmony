@@ -4,7 +4,7 @@ This document is for people who want to contribute to this repository!
 
 ## Code Style
 
-We use [standard.js](https://standardjs.org) with [eslint](https://eslint.org) and [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint).
+We use [standard.js](https://standardjs.org) with [Deno's linting](https://docs.deno.com/runtime/reference/cli/lint/).
 So please don't make as lint errors as possible. There're many rules in standard.js but the highlight things are:
 
 - Use `camelCase` for function names, variables, etc.

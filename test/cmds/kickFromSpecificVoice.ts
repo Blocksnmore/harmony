@@ -1,14 +1,14 @@
 import {
   Command,
-  CommandContext,
+  type CommandContext,
   ChannelTypes,
-  VoiceChannel
+  type VoiceChannel
 } from '../../mod.ts'
 
 export default class KickFromSpecificVoiceCommand extends Command {
-  name = 'kickFromSpecificVoice'
+  override name = 'kickFromSpecificVoice'
 
-  async execute(ctx: CommandContext): Promise<void> {
+  override async execute(ctx: CommandContext): Promise<void> {
     if (ctx.guild !== undefined) {
       const channel = await ctx.guild.channels.get('YOUR VOICE CHANNEL ID')
       if (channel === undefined || channel.type !== ChannelTypes.GUILD_VOICE) {
@@ -16,7 +16,6 @@ export default class KickFromSpecificVoiceCommand extends Command {
         return
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const members = await (channel as VoiceChannel).disconnectAll()
       members.forEach((member) => {
         ctx.channel.send(`Kicked member ${member.id}`)

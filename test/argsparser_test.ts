@@ -1,4 +1,4 @@
-import { Args, parseArgs } from '../src/utils/command.ts'
+import { type Args, parseArgs } from '../src/utils/command.ts'
 import { assertEquals, assertNotEquals } from './deps.ts'
 
 import type { Message } from '../mod.ts'
@@ -184,15 +184,11 @@ Deno.test({
       message3.content.split(' '),
       message3 as unknown as Message
     )
-    // eslint-disable-next-line
     assertNotEquals(result!.permaban, expectedResult3.permaban)
 
     // This makes sure that only `expectedResult3.permaban` differs
-    // eslint-disable-next-line
     assertEquals(result!.originalMessage, expectedResult3.originalMessage)
-    // eslint-disable-next-line
     assertEquals(result!.user, expectedResult3.user)
-    // eslint-disable-next-line
     assertEquals(result!.reason, expectedResult3.reason)
   },
   sanitizeOps: true,

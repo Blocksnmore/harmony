@@ -11,7 +11,6 @@ export const typingStart: GatewayEventHandler = async (
   const user = await gateway.client.users.get(d.user_id)
   if (user === undefined) return
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const channel = (await gateway.client.channels.get(
     d.channel_id
   )) as TextChannel

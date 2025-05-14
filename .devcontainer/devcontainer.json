@@ -3,7 +3,6 @@
   "extensions": [
     "denoland.vscode-deno",
     "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint"
   ],
   "settings": {
     "deno.path": "/deno/bin/deno",

@@ -45,21 +45,23 @@ export class VoiceChannel extends VoiceChannelSuper {
 
   /** Join the Voice Channel */
   async join(options?: VoiceChannelJoinOptions): Promise<VoiceServerData> {
-    return this.client.voice.join(this.id, options)
+    return await this.client.voice.join(this.id, options)
   }
 
   /** Leave the Voice Channel */
   async leave(): Promise<void> {
-    return this.client.voice.leave(this.guild)
+    return await this.client.voice.leave(this.guild)
   }
 
-  readFromData(data: GuildVoiceChannelPayload): void {
+  override readFromData(data: GuildVoiceChannelPayload): void {
     super.readFromData(data)
     this.bitrate = data.bitrate ?? this.bitrate
     this.userLimit = data.user_limit ?? this.userLimit
   }
 
-  async edit(options?: ModifyVoiceChannelOption): Promise<VoiceChannel> {
+  override async edit(
+    options?: ModifyVoiceChannelOption
+  ): Promise<VoiceChannel> {
     const body: ModifyVoiceChannelPayload = {
       name: options?.name,
       position: options?.position,
@@ -71,7 +73,11 @@ export class VoiceChannel extends VoiceChannelSuper {
 
     const resp = await this.client.rest.patch(CHANNEL(this.id), body)
 
-    return new VoiceChannel(this.client, resp, this.guild)
+    return new VoiceChannel(
+      this.client,
+      resp as GuildVoiceChannelPayload,
+      this.guild
+    )
   }
 
   async setBitrate(rate: number | undefined): Promise<VoiceChannel> {

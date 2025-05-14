@@ -50,9 +50,6 @@ typings/
 # Optional npm cache directory
 .npm
 
-# Optional eslint cache
-.eslintcache
-
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/
@@ -102,10 +99,6 @@ dist
 
 # TernJS port file
 .tern-port
-
-# Used ESLint for linting so block package-lock
-package-lock.json
-yarn.lock
 
 # PRIVACY XDDDD
 src/test/config.ts

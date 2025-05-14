@@ -1,6 +1,6 @@
 import type { Gateway, GatewayEventHandler } from '../mod.ts'
-import { Guild } from '../../structures/guild.ts'
-import { GuildMemberChunkPayload } from '../../types/gateway.ts'
+import type { Guild } from '../../structures/guild.ts'
+import type { GuildMemberChunkPayload } from '../../types/gateway.ts'
 
 export const guildMembersChunk: GatewayEventHandler = async (
   gateway: Gateway,

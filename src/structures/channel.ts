@@ -43,8 +43,8 @@ import type { VoiceChannel } from '../structures/guildVoiceChannel.ts'
 import type { StageVoiceChannel } from '../structures/guildVoiceStageChannel.ts'
 import type { TextChannel } from '../structures/textChannel.ts'
 import type { ThreadChannel } from '../structures/threadChannel.ts'
-import { CreateInviteOptions } from '../managers/invites.ts'
-import { Invite } from './invite.ts'
+import type { CreateInviteOptions } from '../managers/invites.ts'
+import type { Invite } from './invite.ts'
 
 export class Channel extends SnowflakeBase {
   type!: ChannelTypes
@@ -56,7 +56,7 @@ export class Channel extends SnowflakeBase {
     return `<#${this.id}>`
   }
 
-  toString(): string {
+  override toString(): string {
     return this.mention
   }
 
@@ -147,7 +147,7 @@ export class GuildChannel extends Channel {
     this.parentID = data.parent_id
   }
 
-  readFromData(data: GuildChannelPayloads): void {
+  override readFromData(data: GuildChannelPayloads): void {
     super.readFromData(data)
     this.guildID = data.guild_id ?? this.guildID
     this.name = data.name ?? this.name
@@ -446,6 +446,6 @@ export class GuildChannel extends Channel {
 
   /** Create an Invite for this Channel */
   async createInvite(options?: CreateInviteOptions): Promise<Invite> {
-    return this.guild.invites.create(this.id, options)
+    return await this.guild.invites.create(this.id, options)
   }
 }

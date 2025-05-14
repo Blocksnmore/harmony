@@ -1,4 +1,4 @@
-import { Client } from '../client/mod.ts'
+import type { Client } from '../client/mod.ts'
 import { Channel } from '../structures/channel.ts'
 import { Embed } from '../structures/embed.ts'
 import { Message } from '../structures/message.ts'
@@ -24,7 +24,7 @@ export class ChannelsManager extends BaseManager<ChannelPayload, Channel> {
   }
 
   async getUserDM(user: User | string): Promise<string | undefined> {
-    return this.client.cache.get(
+    return await this.client.cache.get(
       'user_dms',
       typeof user === 'string' ? user : user.id
     )
@@ -39,13 +39,14 @@ export class ChannelsManager extends BaseManager<ChannelPayload, Channel> {
   }
 
   // Override get method as Generic
-  async get<T extends Channel = Channel>(key: string): Promise<T | undefined> {
+  override async get<T extends Channel = Channel>(
+    key: string
+  ): Promise<T | undefined> {
     const data = await this._get(key)
     if (data === undefined) return
     let guild
     if ('guild_id' in data) {
       guild = await this.client.guilds.get(
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         (data as GuildChannelPayload).guild_id
       )
     }
@@ -53,7 +54,7 @@ export class ChannelsManager extends BaseManager<ChannelPayload, Channel> {
     return res as T
   }
 
-  async array(): Promise<Channel[]> {
+  override async array(): Promise<Channel[]> {
     const arr = await (this.client.cache.array(
       this.cacheName
     ) as ChannelPayload[])
@@ -72,15 +73,17 @@ export class ChannelsManager extends BaseManager<ChannelPayload, Channel> {
   }
 
   /** Fetches a Channel by ID, cache it, resolve it */
-  async fetch<T = Channel>(id: string): Promise<T> {
+  override async fetch<T = Channel>(id: string): Promise<T> {
     return await new Promise((resolve, reject) => {
       this.client.rest
         .get(CHANNEL(id))
         .then(async (data) => {
           this.set(id, data as ChannelPayload)
           let guild
-          if (data.guild_id !== undefined) {
-            guild = await this.client.guilds.get(data.guild_id)
+          if ((data as { guild_id?: string }).guild_id !== undefined) {
+            guild = await this.client.guilds.get(
+              (data as { guild_id: string }).guild_id
+            )
           }
           resolve(
             getChannelByType(
@@ -162,8 +165,13 @@ export class ChannelsManager extends BaseManager<ChannelPayload, Channel> {
       typeof channel === 'string'
         ? (await this.get<TextChannel>(channel))!
         : channel
-    const res = new Message(this.client, resp, chan, this.client.user!)
-    await res.mentions.fromPayload(resp)
+    const res = new Message(
+      this.client,
+      resp as MessagePayload,
+      chan,
+      this.client.user!
+    )
+    await res.mentions.fromPayload(resp as MessagePayload)
     return res
   }
 
@@ -213,11 +221,15 @@ export class ChannelsManager extends BaseManager<ChannelPayload, Channel> {
 
     const chan =
       typeof channel === 'string'
-        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          (await this.get<TextChannel>(channel))!
+        ? (await this.get<TextChannel>(channel))!
         : channel
-    const res = new Message(this.client, newMsg, chan, this.client.user)
-    await res.mentions.fromPayload(newMsg)
+    const res = new Message(
+      this.client,
+      newMsg as MessagePayload,
+      chan,
+      this.client.user
+    )
+    await res.mentions.fromPayload(newMsg as MessagePayload)
     return res
   }
 
@@ -235,9 +247,9 @@ export class ChannelsManager extends BaseManager<ChannelPayload, Channel> {
       throw new Error(`Channel ${channelID} not found.`)
     }
 
-    const pins: MessagePayload[] = await this.client.rest.api.channels[
+    const pins: MessagePayload[] = (await this.client.rest.api.channels[
       channelID
-    ].pins.get()
+    ].pins.get()) as MessagePayload[]
 
     for (const pin of pins) {
       await channelStruct.messages.set(pin.id, pin)

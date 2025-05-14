@@ -5,7 +5,7 @@ export class Base {
   client!: Client
 
   // any is for untyped JSON here too.
-  constructor(client: Client, _data?: any) {
+  constructor(client: Client, _data?: unknown) {
     Object.defineProperty(this, 'client', { value: client, enumerable: false })
   }
 }

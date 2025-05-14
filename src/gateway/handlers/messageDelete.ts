@@ -8,7 +8,6 @@ export const messageDelete: GatewayEventHandler = async (
 ) => {
   const channel = await gateway.client.channels.get<TextChannel>(d.channel_id)
   // if (channel === undefined)
-  //   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   //   channel = (await gateway.client.channels.fetch(d.channel_id)) as TextChannel
   if (channel === undefined) return
   const message = await channel.messages.get(d.id)

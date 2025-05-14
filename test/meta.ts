@@ -2,8 +2,8 @@ import {
   CommandClient,
   Command,
   Intents,
-  CommandOptions,
-  CommandContext
+  type CommandOptions,
+  type CommandContext
 } from '../mod.ts'
 import { TOKEN } from './config.ts'
 

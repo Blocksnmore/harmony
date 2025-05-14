@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/method-signature-style */
 import type { User } from '../structures/user.ts'
 import { GatewayIntents } from '../types/gateway.ts'
-import { Gateway } from '../gateway/mod.ts'
-import { RESTManager, RESTOptions, TokenType } from '../rest/mod.ts'
-import { DefaultCacheAdapter, ICacheAdapter } from '../cache/mod.ts'
+import type { Gateway } from '../gateway/mod.ts'
+import { RESTManager, type RESTOptions, TokenType } from '../rest/mod.ts'
+import { DefaultCacheAdapter, type ICacheAdapter } from '../cache/mod.ts'
 import { UsersManager } from '../managers/users.ts'
 import { GuildManager } from '../managers/guilds.ts'
 import { ChannelsManager } from '../managers/channels.ts'
 import { ClientPresence } from '../structures/presence.ts'
 import { EmojisManager } from '../managers/emojis.ts'
-import { ActivityGame, ClientActivity } from '../types/presence.ts'
+import type { ActivityGame, ClientActivity } from '../types/presence.ts'
 import { Extension } from '../commands/extension.ts'
 import { InteractionsClient } from '../interactions/client.ts'
 import { ShardManager } from './shard.ts'
@@ -25,8 +24,14 @@ import type { DMChannel } from '../structures/dmChannel.ts'
 import { Template } from '../structures/template.ts'
 import { VoiceManager } from './voice.ts'
 import { StickersManager } from '../managers/stickers.ts'
-import { createOAuthURL, OAuthURLOptions } from '../utils/oauthURL.ts'
-import type { AllowedMentionsPayload } from '../types/channel.ts'
+import { createOAuthURL, type OAuthURLOptions } from '../utils/oauthURL.ts'
+import type {
+  AllowedMentionsPayload,
+  DMChannelPayload
+} from '../types/channel.ts'
+import type { TemplatePayload } from '../../mod.ts'
+import type { InvitePayload } from '../types/invite.ts'
+import type { ApplicationPayload } from '../types/application.ts'
 
 /** OS related properties sent with Gateway Identify */
 export interface ClientProperties {
@@ -241,7 +246,9 @@ export class Client extends HarmonyEventEmitter<ClientEvents> {
           this.token = token
           this.debug('Info', 'Found token in ENV')
         }
-      } catch (e) {}
+      } catch {
+        // Ignore
+      }
     }
 
     const restOptions: RESTOptions = {
@@ -294,7 +301,6 @@ export class Client extends HarmonyEventEmitter<ClientEvents> {
 
   /** Emits debug event */
   debug(tag: string, msg: string): void {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.emit('debug', `[${tag}] ${msg}`)
   }
 
@@ -303,7 +309,7 @@ export class Client extends HarmonyEventEmitter<ClientEvents> {
     else if (this.token !== undefined) {
       try {
         return atob(this.token.split('.')[0])
-      } catch (e) {
+      } catch {
         return this._id ?? 'unknown'
       }
     } else {
@@ -314,7 +320,7 @@ export class Client extends HarmonyEventEmitter<ClientEvents> {
   /** Fetch Application of the Client */
   async fetchApplication(): Promise<Application> {
     const app = await this.rest.api.oauth2.applications['@me'].get()
-    return new Application(this, app)
+    return new Application(this, app as ApplicationPayload)
   }
 
   /** Fetch an Invite */
@@ -323,7 +329,7 @@ export class Client extends HarmonyEventEmitter<ClientEvents> {
       this.rest
         .get(INVITE(id))
         .then((data) => {
-          resolve(new Invite(this, data))
+          resolve(new Invite(this, data as InvitePayload))
         })
         .catch((e) => reject(e))
     })
@@ -405,7 +411,10 @@ export class Client extends HarmonyEventEmitter<ClientEvents> {
     }
   }
 
-  async emit(event: keyof ClientEvents, ...args: any[]): Promise<void> {
+  override async emit(
+    event: keyof ClientEvents,
+    ...args: unknown[]
+  ): Promise<void> {
     const collectors: Array<Collector<unknown[]>> = []
     for (const collector of this.collectors.values()) {
       if (collector.event === event) collectors.push(collector)
@@ -414,14 +423,13 @@ export class Client extends HarmonyEventEmitter<ClientEvents> {
       collectors.forEach((collector) => collector._fire(...args))
     }
     // TODO(DjDeveloperr): Fix this ts-ignore
-    // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-    // @ts-ignore
-    return super.emit(event, ...args)
+    // @ts-expect-error Type mismatch
+    return await super.emit(event, ...args)
   }
 
   /** Returns an array of voice region objects that can be used when creating servers. */
   async fetchVoiceRegions(): Promise<VoiceRegion[]> {
-    return this.rest.api.voice.regions.get()
+    return (await this.rest.api.voice.regions.get()) as VoiceRegion[]
   }
 
   /** Modify current (Client) User. */
@@ -459,9 +467,9 @@ export class Client extends HarmonyEventEmitter<ClientEvents> {
   /** Create a DM Channel with a User */
   async createDM(user: User | string): Promise<DMChannel> {
     const id = typeof user === 'object' ? user.id : user
-    const dmPayload = await this.rest.api.users['@me'].channels.post({
+    const dmPayload = (await this.rest.api.users['@me'].channels.post({
       recipient_id: id
-    })
+    })) as DMChannelPayload
     await this.channels.set(dmPayload.id, dmPayload)
     return this.channels.get<DMChannel>(dmPayload.id) as unknown as DMChannel
   }
@@ -469,7 +477,7 @@ export class Client extends HarmonyEventEmitter<ClientEvents> {
   /** Returns a template object for the given code. */
   async fetchTemplate(code: string): Promise<Template> {
     const payload = await this.rest.api.guilds.templates[code].get()
-    return new Template(this, payload)
+    return new Template(this, payload as TemplatePayload)
   }
 
   /** Creates an OAuth2 URL */
@@ -486,15 +494,14 @@ export class Client extends HarmonyEventEmitter<ClientEvents> {
 }
 
 /** Event decorator to create an Event handler from function */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function event(
   name?: keyof ClientEvents
 ): (
-  original: (...args: any[]) => any,
+  original: (...args: unknown[]) => unknown,
   ctx: ClassMethodDecoratorContext<Client | Extension>
-) => (...args: any[]) => any {
+) => (...args: unknown[]) => unknown {
   return function (
-    original: (...args: any[]) => any,
+    original: (...args: unknown[]) => unknown,
     {
       name: prop,
       addInitializer,

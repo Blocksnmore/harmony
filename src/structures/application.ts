@@ -1,9 +1,12 @@
 import type { Client } from '../client/mod.ts'
-import { ApplicationFlags, ApplicationPayload } from '../types/application.ts'
+import {
+  ApplicationFlags,
+  type ApplicationPayload
+} from '../types/application.ts'
 import { SnowflakeBase } from './base.ts'
 import { User } from './user.ts'
 import { Team } from './team.ts'
-import { BitField, BitFieldResolvable } from '../utils/bitfield.ts'
+import { BitField, type BitFieldResolvable } from '../utils/bitfield.ts'
 
 export class ApplicationFlagsManager extends BitField {
   constructor(bits: BitFieldResolvable | undefined) {

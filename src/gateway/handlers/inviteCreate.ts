@@ -1,16 +1,15 @@
 import type { Gateway, GatewayEventHandler } from '../mod.ts'
-import { Guild } from '../../structures/guild.ts'
-import { InviteCreatePayload } from '../../types/gateway.ts'
-import { ChannelPayload } from '../../types/channel.ts'
-import { GuildPayload } from '../../types/guild.ts'
-import { InvitePayload } from '../../types/invite.ts'
-import { Invite } from '../../structures/invite.ts'
+import type { Guild } from '../../structures/guild.ts'
+import type { InviteCreatePayload } from '../../types/gateway.ts'
+import type { ChannelPayload } from '../../types/channel.ts'
+import type { GuildPayload } from '../../types/guild.ts'
+import type { InvitePayload } from '../../types/invite.ts'
+import type { Invite } from '../../structures/invite.ts'
 
 export const inviteCreate: GatewayEventHandler = async (
   gateway: Gateway,
   d: InviteCreatePayload
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const guild: Guild | undefined = await gateway.client.guilds.get(d.guild_id!)
 
   // Weird case, shouldn't happen
@@ -21,7 +20,6 @@ export const inviteCreate: GatewayEventHandler = async (
    */
   const cachedChannel = await gateway.client.channels._get(d.channel_id)
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const cachedGuild: GuildPayload | undefined =
     d.guild_id === undefined
       ? undefined

@@ -1,11 +1,11 @@
 import type { Message } from '../structures/message.ts'
 import type { GuildTextBasedChannel } from '../structures/guildTextChannel.ts'
-import { Client, ClientOptions } from '../client/mod.ts'
+import { Client, type ClientOptions } from '../client/mod.ts'
 import {
   CategoriesManager,
   Command,
-  CommandContext,
-  CommandOptions,
+  type CommandContext,
+  type CommandOptions,
   CommandsManager,
   parseCommand
 } from './command.ts'
@@ -114,29 +114,29 @@ export class CommandClient extends Client implements CommandClientOptions {
 
     this.getGuildPrefix =
       options.getGuildPrefix === undefined
-        ? (id: string) => this.prefix
+        ? (_id: string) => this.prefix
         : options.getGuildPrefix
     this.getUserPrefix =
       options.getUserPrefix === undefined
-        ? (id: string) => this.prefix
+        ? (_id: string) => this.prefix
         : options.getUserPrefix
 
     this.getChannelPrefix =
       options.getChannelPrefix === undefined
-        ? (id: string) => this.prefix
+        ? (_id: string) => this.prefix
         : options.getChannelPrefix
 
     this.isUserBlacklisted =
       options.isUserBlacklisted === undefined
-        ? (id: string) => false
+        ? (_id: string) => false
         : options.isUserBlacklisted
     this.isGuildBlacklisted =
       options.isGuildBlacklisted === undefined
-        ? (id: string) => false
+        ? (_id: string) => false
         : options.isGuildBlacklisted
     this.isChannelBlacklisted =
       options.isChannelBlacklisted === undefined
-        ? (id: string) => false
+        ? (_id: string) => false
         : options.isChannelBlacklisted
 
     this.spacesAfterPrefix =
@@ -174,7 +174,7 @@ export class CommandClient extends Client implements CommandClientOptions {
   }
 
   /** Processes a Message to Execute Command. */
-  async processMessage(msg: Message): Promise<any> {
+  async processMessage(msg: Message): Promise<unknown> {
     if (!this.allowBots && msg.author.bot === true) return
 
     let prefix: PrefixType = []
@@ -419,7 +419,7 @@ export class CommandClient extends Client implements CommandClientOptions {
     ) {
       try {
         return command.onMissingArgs(ctx)
-      } catch (e) {
+      } catch {
         return this.emit('commandMissingArgs', ctx)
       }
     }
@@ -452,7 +452,7 @@ export class CommandClient extends Client implements CommandClientOptions {
       return this.emit(
         'commandOnCooldown',
         ctx,
-        (forCommand ? anyoneCanUseCommandAt : anyoneCanUseAnyCommandAt) -
+        (forCommand ? anyoneCanUseCommandAt : unknownoneCanUseAnyCommandAt) -
           Date.now(),
         forCommand
           ? CommandCooldownType.BOT_COMMAND
@@ -523,11 +523,11 @@ export class CommandClient extends Client implements CommandClientOptions {
 export function command(
   options?: CommandOptions
 ): (
-  original: (...args: any[]) => any,
+  original: (...args: unknown[]) => unknown,
   ctx: ClassMethodDecoratorContext<CommandClient | Extension>
-) => (...args: any[]) => any {
+) => (...args: unknown[]) => unknown {
   return function (
-    original: (...args: any[]) => any,
+    original: (...args: unknown[]) => unknown,
     {
       name,
       addInitializer,
@@ -562,11 +562,11 @@ export function command(
 export function subcommand(
   options?: CommandOptions
 ): (
-  original: (...args: any[]) => any,
+  original: (...args: unknown[]) => unknown,
   ctx: ClassMethodDecoratorContext<Command>
-) => (...args: any[]) => any {
+) => (...args: unknown[]) => unknown {
   return function (
-    original: (...args: any[]) => any,
+    original: (...args: unknown[]) => unknown,
     {
       name,
       addInitializer,

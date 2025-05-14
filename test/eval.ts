@@ -1,4 +1,3 @@
-/* eslint-disable no-eval */
 import * as discord from '../mod.ts'
 import { TOKEN } from './config.ts'
 

@@ -1,6 +1,7 @@
-import {
+import type {
   MessageComponentEmoji,
-  MessageComponentPayload
+  MessageComponentPayload,
+  SelectComponentOption
 } from '../types/messageComponents.ts'
 
 export type ElementType = 'Root' | 'ActionRow' | 'Button' | 'Select' | 'Option'
@@ -17,16 +18,19 @@ export type ButtonStyleName =
 
 // Note: Believe me `any`s in here are for good.
 
-export interface Element<T = any> {
+export interface Element<T = unknown> {
   type: ElementType
   props: T
   children?: Element[]
 }
 
-export type Component<T = any> = (props?: T, children?: any) => Element<T>
+export type Component<T = unknown> = (
+  props?: T,
+  children?: unknown
+) => Element<T>
 
 /** Represents a row containing other components. All components must go inside Action Rows. */
-export function ActionRow(props: {}, children: Element[]): Element<{}> {
+export function ActionRow(props: object, children: Element[]): Element<object> {
   return {
     type: 'ActionRow',
     props,
@@ -96,14 +100,13 @@ export function Option(
 }
 
 /** TSX compiles down to BotUI.createElement */
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class BotUI {
-  static createElement<T = any>(
+  static createElement<T = unknown>(
     component: Component<T>,
     props: T,
     ...children: Array<Element<ButtonProps | SelectProps>>
   ): Element<T> {
-    if (component === undefined) return undefined as any
+    if (component === undefined) return undefined as unknown as Element<T>
     const element = component(props, children)
     return element
   }
@@ -148,39 +151,37 @@ export function fragment(
       components: []
     }
 
-    component.children
-      ?.flat(2)
-      .forEach((el: Element<ButtonProps | SelectProps>) => {
-        if (el.type === 'Button') {
-          const props = el.props as ButtonProps
-          row.components?.push({
-            type: 2,
-            custom_id: props.id,
-            label: props.label,
-            style: resolveStyle(props.style),
-            url: props.url,
-            emoji: props.emoji,
-            disabled: props.disabled
-          })
-        } else if (el.type === 'Select') {
-          const props = el.props as SelectProps
-          row.components?.push({
-            type: 3,
-            custom_id: props.id,
-            min_values: props.minValues,
-            max_values: props.maxValues,
-            placeholder: props.placeholder,
-            disabled: props.disabled,
-            options: Array.isArray(el.children)
-              ? el.children.map((e) => {
-                  return e.props
-                })
-              : []
-          })
-        } else {
-          throw new Error('Invalid second level component: ' + el.type)
-        }
-      })
+    component.children?.flat(2).forEach((el) => {
+      if (el.type === 'Button') {
+        const props = el.props as ButtonProps
+        row.components?.push({
+          type: 2,
+          custom_id: props.id,
+          label: props.label,
+          style: resolveStyle(props.style),
+          url: props.url,
+          emoji: props.emoji,
+          disabled: props.disabled
+        })
+      } else if (el.type === 'Select') {
+        const props = el.props as SelectProps
+        row.components?.push({
+          type: 3,
+          custom_id: props.id,
+          min_values: props.minValues,
+          max_values: props.maxValues,
+          placeholder: props.placeholder,
+          disabled: props.disabled,
+          options: Array.isArray(el.children)
+            ? el.children.map((e) => {
+                return e.props as SelectComponentOption
+              })
+            : []
+        })
+      } else {
+        throw new Error('Invalid second level component: ' + el.type)
+      }
+    })
 
     if (row.components !== undefined && row.components.length > 5) {
       throw new Error('An Action Row may only have 5 components at max')

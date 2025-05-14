@@ -40,7 +40,6 @@ client.interactions.handle('modal', (i) => {
 })
 
 client.on('interactionCreate', (i) => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (i.isModalSubmit()) {
     return i.reply(
       `Short text: ${

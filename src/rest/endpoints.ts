@@ -71,7 +71,7 @@ export class RESTEndpoints {
    * Gets entitlements for a given user. You can use this on your game backend to check entitlements of an arbitrary user, or perhaps in an administrative panel for your support team.
    */
   async getEntitlements(applicationId: string): Promise<unknown> {
-    return this.rest.get(`/applications/${applicationId}/entitlements`)
+    return await this.rest.get(`/applications/${applicationId}/entitlements`)
   }
 
   /**
@@ -81,7 +81,7 @@ export class RESTEndpoints {
     applicationId: string,
     entitlementId: string
   ): Promise<unknown> {
-    return this.rest.get(
+    return await this.rest.get(
       `/applications/${applicationId}/entitlements/${entitlementId}`
     )
   }
@@ -90,7 +90,7 @@ export class RESTEndpoints {
    * Get all SKUs for an application.
    */
   async getSKUs(applicationId: string): Promise<unknown> {
-    return this.rest.get(`/applications/${applicationId}/skus`)
+    return await this.rest.get(`/applications/${applicationId}/skus`)
   }
 
   /**
@@ -101,7 +101,7 @@ export class RESTEndpoints {
     entitlementId: string,
     payload: unknown
   ): Promise<unknown> {
-    return this.rest.post(
+    return await this.rest.post(
       `/applications/${applicationId}/entitlements/${entitlementId}/consume`,
       payload
     )
@@ -114,7 +114,7 @@ export class RESTEndpoints {
     applicationId: string,
     entitlementId: string
   ): Promise<unknown> {
-    return this.rest.delete(
+    return await this.rest.delete(
       `/applications/${applicationId}/entitlements/${entitlementId}`
     )
   }
@@ -127,7 +127,10 @@ export class RESTEndpoints {
     userId: string,
     payload: unknown
   ): Promise<unknown> {
-    return this.rest.put(`/store/skus/${skuId}/discounts/${userId}`, payload)
+    return await this.rest.put(
+      `/store/skus/${skuId}/discounts/${userId}`,
+      payload
+    )
   }
 
   /**
@@ -137,7 +140,7 @@ export class RESTEndpoints {
     skuId: string,
     userId: string
   ): Promise<unknown> {
-    return this.rest.delete(`/store/skus/${skuId}/discounts/${userId}`)
+    return await this.rest.delete(`/store/skus/${skuId}/discounts/${userId}`)
   }
 
   /**
@@ -146,14 +149,17 @@ export class RESTEndpoints {
   async getGlobalApplicationCommands(
     applicationId: string
   ): Promise<ApplicationCommandPayload> {
-    return this.rest.get(`/applications/${applicationId}/commands`)
+    return await this.rest.get(`/applications/${applicationId}/commands`)
   }
 
   async createGlobalApplicationCommand(
     applicationId: string,
     payload: unknown
   ): Promise<ApplicationCommandPayload> {
-    return this.rest.post(`/applications/${applicationId}/commands`, payload)
+    return await this.rest.post(
+      `/applications/${applicationId}/commands`,
+      payload
+    )
   }
 
   /**
@@ -163,7 +169,9 @@ export class RESTEndpoints {
     applicationId: string,
     commandId: string
   ): Promise<ApplicationCommandPayload[]> {
-    return this.rest.get(`/applications/${applicationId}/commands/${commandId}`)
+    return await this.rest.get(
+      `/applications/${applicationId}/commands/${commandId}`
+    )
   }
 
   async editGlobalApplicationCommand(
@@ -171,7 +179,7 @@ export class RESTEndpoints {
     commandId: string,
     payload: ApplicationCommandPartial
   ): Promise<ApplicationCommandPayload> {
-    return this.rest.patch(
+    return await this.rest.patch(
       `/applications/${applicationId}/commands/${commandId}`,
       payload
     )
@@ -184,7 +192,7 @@ export class RESTEndpoints {
     applicationId: string,
     commandId: string
   ): Promise<void> {
-    return this.rest.delete(
+    return await this.rest.delete(
       `/applications/${applicationId}/commands/${commandId}`
     )
   }
@@ -196,7 +204,7 @@ export class RESTEndpoints {
     applicationId: string,
     guildId: string
   ): Promise<ApplicationCommandPayload[]> {
-    return this.rest.get(
+    return await this.rest.get(
       `/applications/${applicationId}/guilds/${guildId}/commands`
     )
   }
@@ -208,7 +216,10 @@ export class RESTEndpoints {
     applicationId: string,
     payload: ApplicationCommandPartial[]
   ): Promise<ApplicationCommandPayload[]> {
-    return this.rest.put(`/applications/${applicationId}/commands`, payload)
+    return await this.rest.put(
+      `/applications/${applicationId}/commands`,
+      payload
+    )
   }
 
   async createGuildApplicationCommand(
@@ -216,7 +227,7 @@ export class RESTEndpoints {
     guildId: string,
     payload: ApplicationCommandPartial
   ): Promise<ApplicationCommandPayload> {
-    return this.rest.post(
+    return await this.rest.post(
       `/applications/${applicationId}/guilds/${guildId}/commands`,
       payload
     )
@@ -230,7 +241,7 @@ export class RESTEndpoints {
     guildId: string,
     commandId: string
   ): Promise<ApplicationCommandPayload> {
-    return this.rest.get(
+    return await this.rest.get(
       `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}`
     )
   }
@@ -241,7 +252,7 @@ export class RESTEndpoints {
     commandId: string,
     payload: ApplicationCommandPartial
   ): Promise<ApplicationCommandPayload> {
-    return this.rest.patch(
+    return await this.rest.patch(
       `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}`,
       payload
     )
@@ -255,7 +266,7 @@ export class RESTEndpoints {
     guildId: string,
     commandId: string
   ): Promise<void> {
-    return this.rest.delete(
+    return await this.rest.delete(
       `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}`
     )
   }
@@ -268,7 +279,7 @@ export class RESTEndpoints {
     guildId: string,
     payload: ApplicationCommandPartial
   ): Promise<ApplicationCommandPayload[]> {
-    return this.rest.put(
+    return await this.rest.put(
       `/applications/${applicationId}/guilds/${guildId}/commands`,
       payload
     )
@@ -282,7 +293,7 @@ export class RESTEndpoints {
     interactionToken: string,
     payload: InteractionResponsePayload
   ): Promise<void> {
-    return this.rest.post(
+    return await this.rest.post(
       `/interactions/${interactionId}/${interactionToken}/callback`,
       payload
     )
@@ -296,7 +307,7 @@ export class RESTEndpoints {
     interactionToken: string,
     payload: CreateWebhookMessageBasePayload
   ): Promise<MessagePayload> {
-    return this.rest.patch(
+    return await this.rest.patch(
       `/webhooks/${applicationId}/${interactionToken}/messages/@original`,
       payload
     )
@@ -309,7 +320,7 @@ export class RESTEndpoints {
     applicationId: string,
     interactionToken: string
   ): Promise<void> {
-    return this.rest.delete(
+    return await this.rest.delete(
       `/webhooks/${applicationId}/${interactionToken}/messages/@original`
     )
   }
@@ -322,7 +333,7 @@ export class RESTEndpoints {
     interactionToken: string,
     payload: CreateWebhookMessageBasePayload
   ): Promise<MessagePayload> {
-    return this.rest.post(
+    return await this.rest.post(
       `/webhooks/${applicationId}/${interactionToken}`,
       payload
     )
@@ -337,7 +348,7 @@ export class RESTEndpoints {
     messageId: string,
     payload: CreateWebhookMessageBasePayload
   ): Promise<MessagePayload> {
-    return this.rest.patch(
+    return await this.rest.patch(
       `/webhooks/${applicationId}/${interactionToken}/messages/${messageId}`,
       payload
     )
@@ -351,7 +362,7 @@ export class RESTEndpoints {
     interactionToken: string,
     messageId: string
   ): Promise<void> {
-    return this.rest.delete(
+    return await this.rest.delete(
       `/webhooks/${applicationId}/${interactionToken}/messages/${messageId}`
     )
   }
@@ -381,14 +392,14 @@ export class RESTEndpoints {
         )}`
       }
     }
-    return this.rest.get(`/guilds/${guildId}/audit-logs${q}`)
+    return await this.rest.get(`/guilds/${guildId}/audit-logs${q}`)
   }
 
   /**
    * Get a channel by ID. Returns a [channel](#DOCS_RESOURCES_CHANNEL/channel-object) object.
    */
   async getChannel(channelId: string): Promise<ChannelPayload> {
-    return this.rest.get(`/channels/${channelId}`)
+    return await this.rest.get(`/channels/${channelId}`)
   }
 
   /**
@@ -398,21 +409,21 @@ export class RESTEndpoints {
     channelId: string,
     payload: Partial<ChannelPayload>
   ): Promise<ChannelPayload> {
-    return this.rest.patch(`/channels/${channelId}`, payload)
+    return await this.rest.patch(`/channels/${channelId}`, payload)
   }
 
   /**
    * Delete a channel, or close a private message. Requires the `MANAGE_CHANNELS` permission for the guild. Deleting a category does not delete its child channels; they will have their `parent_id` removed and a [Channel Update](#DOCS_TOPICS_GATEWAY/channel-update) Gateway event will fire for each of them. Returns a [channel](#DOCS_RESOURCES_CHANNEL/channel-object) object on success. Fires a [Channel Delete](#DOCS_TOPICS_GATEWAY/channel-delete) Gateway event.
    */
   async deleteChannel(channelId: string): Promise<void> {
-    return this.rest.delete(`/channels/${channelId}`)
+    return await this.rest.delete(`/channels/${channelId}`)
   }
 
   /**
    * Returns the messages for a channel. If operating on a guild channel, this endpoint requires the `VIEW_CHANNEL` permission to be present on the current user. If the current user is missing the 'READ_MESSAGE_HISTORY' permission in the channel then this will return no messages (since they cannot read the message history). Returns an array of [message](#DOCS_RESOURCES_CHANNEL/message-object) objects on success.
    */
   async getChannelMessages(channelId: string): Promise<MessagePayload[]> {
-    return this.rest.get(`/channels/${channelId}/messages`)
+    return await this.rest.get(`/channels/${channelId}/messages`)
   }
 
   /**
@@ -422,14 +433,14 @@ export class RESTEndpoints {
     channelId: string,
     messageId: string
   ): Promise<MessagePayload> {
-    return this.rest.get(`/channels/${channelId}/messages/${messageId}`)
+    return await this.rest.get(`/channels/${channelId}/messages/${messageId}`)
   }
 
   async createMessage(
     channelId: string,
     payload: CreateMessagePayload
   ): Promise<MessagePayload> {
-    return this.rest.post(`/channels/${channelId}/messages`, payload)
+    return await this.rest.post(`/channels/${channelId}/messages`, payload)
   }
 
   /**
@@ -440,7 +451,7 @@ export class RESTEndpoints {
     channelId: string,
     messageId: string
   ): Promise<MessagePayload> {
-    return this.rest.post(
+    return await this.rest.post(
       `/channels/${channelId}/messages/${messageId}/crosspost`
     )
   }
@@ -454,7 +465,7 @@ export class RESTEndpoints {
     messageId: string,
     emoji: string
   ): Promise<void> {
-    return this.rest.put(
+    return await this.rest.put(
       `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(
         emoji
       )}/@me`
@@ -470,7 +481,7 @@ export class RESTEndpoints {
     messageId: string,
     emoji: string
   ): Promise<void> {
-    return this.rest.delete(
+    return await this.rest.delete(
       `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(
         emoji
       )}/@me`
@@ -487,7 +498,7 @@ export class RESTEndpoints {
     emoji: string,
     userId: string
   ): Promise<void> {
-    return this.rest.delete(
+    return await this.rest.delete(
       `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(
         emoji
       )}/${userId}`
@@ -503,7 +514,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     messageId: string,
     emoji: string
   ): Promise<UserPayload[]> {
-    return this.rest.get(
+    return await this.rest.get(
       `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(
         emoji
       )}`
@@ -517,7 +528,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     channelId: string,
     messageId: string
   ): Promise<void> {
-    return this.rest.delete(
+    return await this.rest.delete(
       `/channels/${channelId}/messages/${messageId}/reactions`
     )
   }
@@ -531,7 +542,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     messageId: string,
     emoji: string
   ): Promise<void> {
-    return this.rest.delete(
+    return await this.rest.delete(
       `/channels/${channelId}/messages/${messageId}/reactions/${emoji}`
     )
   }
@@ -545,7 +556,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     messageId: string,
     payload: EditMessagePayload
   ): Promise<MessagePayload> {
-    return this.rest.patch(
+    return await this.rest.patch(
       `/channels/${channelId}/messages/${messageId}`,
       payload
     )
@@ -555,7 +566,9 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
    * Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user, this endpoint requires the `MANAGE_MESSAGES` permission. Returns a 204 empty response on success. Fires a [Message Delete](#DOCS_TOPICS_GATEWAY/message-delete) Gateway event.
    */
   async deleteMessage(channelId: string, messageId: string): Promise<void> {
-    return this.rest.delete(`/channels/${channelId}/messages/${messageId}`)
+    return await this.rest.delete(
+      `/channels/${channelId}/messages/${messageId}`
+    )
   }
 
   /**
@@ -566,7 +579,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     channelId: string,
     payload: string[]
   ): Promise<void> {
-    return this.rest.post(
+    return await this.rest.post(
       `/channels/${channelId}/messages/bulk-delete`,
       payload
     )
@@ -580,7 +593,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     overwriteId: string,
     payload: OverwritePayload
   ): Promise<void> {
-    return this.rest.put(
+    return await this.rest.put(
       `/channels/${channelId}/permissions/${overwriteId}`,
       payload
     )
@@ -592,7 +605,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
   async getChannelInvites(
     channelId: string
   ): Promise<InviteWithMetadataPayload> {
-    return this.rest.get(`/channels/${channelId}/invites`)
+    return await this.rest.get(`/channels/${channelId}/invites`)
   }
 
   /**
@@ -602,7 +615,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     channelId: string,
     payload: Partial<InvitePayload> = {}
   ): Promise<InvitePayload> {
-    return this.rest.post(`/channels/${channelId}/invites`, payload)
+    return await this.rest.post(`/channels/${channelId}/invites`, payload)
   }
 
   /**
@@ -612,28 +625,30 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     channelId: string,
     overwriteId: string
   ): Promise<void> {
-    return this.rest.delete(`/channels/${channelId}/permissions/${overwriteId}`)
+    return await this.rest.delete(
+      `/channels/${channelId}/permissions/${overwriteId}`
+    )
   }
 
   /**
    * Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns a [followed channel](#DOCS_RESOURCES_CHANNEL/followed-channel-object) object.
    */
   async followNewsChannel(channelId: string): Promise<FollowedChannel> {
-    return this.rest.post(`/channels/${channelId}/followers`)
+    return await this.rest.post(`/channels/${channelId}/followers`)
   }
 
   /**
    * Post a typing indicator for the specified channel. Generally bots should **not** implement this route. However, if a bot is responding to a command and expects the computation to take a few seconds, this endpoint may be called to let the user know that the bot is processing their message. Returns a 204 empty response on success. Fires a [Typing Start](#DOCS_TOPICS_GATEWAY/typing-start) Gateway event.
    */
   async triggerTypingIndicator(channelId: string): Promise<void> {
-    return this.rest.post(`/channels/${channelId}/typing`)
+    return await this.rest.post(`/channels/${channelId}/typing`)
   }
 
   /**
    * Returns all pinned messages in the channel as an array of [message](#DOCS_RESOURCES_CHANNEL/message-object) objects.
    */
   async getPinnedMessages(channelId: string): Promise<MessagePayload[]> {
-    return this.rest.get(`/channels/${channelId}/pins`)
+    return await this.rest.get(`/channels/${channelId}/pins`)
   }
 
   /**
@@ -643,7 +658,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     channelId: string,
     messageId: string
   ): Promise<void> {
-    return this.rest.put(`/channels/${channelId}/pins/${messageId}`)
+    return await this.rest.put(`/channels/${channelId}/pins/${messageId}`)
   }
 
   /**
@@ -653,7 +668,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     channelId: string,
     messageId: string
   ): Promise<void> {
-    return this.rest.delete(`/channels/${channelId}/pins/${messageId}`)
+    return await this.rest.delete(`/channels/${channelId}/pins/${messageId}`)
   }
 
   /**
@@ -663,7 +678,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     channelId: string,
     userId: string
   ): Promise<unknown> {
-    return this.rest.put(`/channels/${channelId}/recipients/${userId}`)
+    return await this.rest.put(`/channels/${channelId}/recipients/${userId}`)
   }
 
   /**
@@ -673,21 +688,21 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     channelId: string,
     userId: string
   ): Promise<void> {
-    return this.rest.delete(`/channels/${channelId}/recipients/${userId}`)
+    return await this.rest.delete(`/channels/${channelId}/recipients/${userId}`)
   }
 
   /**
    * Returns a list of [emoji](#DOCS_RESOURCES_EMOJI/emoji-object) objects for the given guild.
    */
   async listGuildEmojis(guildId: string): Promise<EmojiPayload[]> {
-    return this.rest.get(`/guilds/${guildId}/emojis`)
+    return await this.rest.get(`/guilds/${guildId}/emojis`)
   }
 
   /**
    * Returns an [emoji](#DOCS_RESOURCES_EMOJI/emoji-object) object for the given guild and emoji IDs.
    */
   async getGuildEmoji(guildId: string, emojiId: string): Promise<EmojiPayload> {
-    return this.rest.get(`/guilds/${guildId}/emojis/${emojiId}`)
+    return await this.rest.get(`/guilds/${guildId}/emojis/${emojiId}`)
   }
 
   /**
@@ -697,7 +712,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     payload: CreateEmojiPayload
   ): Promise<EmojiPayload> {
-    return this.rest.post(`/guilds/${guildId}/emojis`, payload)
+    return await this.rest.post(`/guilds/${guildId}/emojis`, payload)
   }
 
   /**
@@ -708,35 +723,38 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     emojiId: string,
     payload: Partial<EmojiPayload>
   ): Promise<EmojiPayload> {
-    return this.rest.patch(`/guilds/${guildId}/emojis/${emojiId}`, payload)
+    return await this.rest.patch(
+      `/guilds/${guildId}/emojis/${emojiId}`,
+      payload
+    )
   }
 
   /**
    * Delete the given emoji. Requires the `MANAGE_EMOJIS` permission. Returns `204 No Content` on success. Fires a [Guild Emojis Update](#DOCS_TOPICS_GATEWAY/guild-emojis-update) Gateway event.
    */
   async deleteGuildEmoji(guildId: string, emojiId: string): Promise<void> {
-    return this.rest.delete(`/guilds/${guildId}/emojis/${emojiId}`)
+    return await this.rest.delete(`/guilds/${guildId}/emojis/${emojiId}`)
   }
 
   /**
    * Create a new guild. Returns a [guild](#DOCS_RESOURCES_GUILD/guild-object) object on success. Fires a [Guild Create](#DOCS_TOPICS_GATEWAY/guild-create) Gateway event.
    */
   async createGuild(payload: Partial<GuildPayload>): Promise<GuildPayload> {
-    return this.rest.post(`/guilds`, payload)
+    return await this.rest.post(`/guilds`, payload)
   }
 
   /**
    * Returns the [guild](#DOCS_RESOURCES_GUILD/guild-object) object for the given id. If `with_counts` is set to `true`, this endpoint will also return `approximate_member_count` and `approximate_presence_count` for the guild.
    */
   async getGuild(guildId: string): Promise<GuildPayload> {
-    return this.rest.get(`/guilds/${guildId}`)
+    return await this.rest.get(`/guilds/${guildId}`)
   }
 
   /**
    * Returns the [guild preview](#DOCS_RESOURCES_GUILD/guild-preview-object) object for the given id. If the user is not in the guild, then the guild must be Discoverable.
    */
   async getGuildPreview(guildId: string): Promise<GuildPreviewPayload> {
-    return this.rest.get(`/guilds/${guildId}/preview`)
+    return await this.rest.get(`/guilds/${guildId}/preview`)
   }
 
   /**
@@ -746,21 +764,21 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     payload: Partial<GuildPayload>
   ): Promise<GuildPayload> {
-    return this.rest.patch(`/guilds/${guildId}`, payload)
+    return await this.rest.patch(`/guilds/${guildId}`, payload)
   }
 
   /**
    * Delete a guild permanently. User must be owner. Returns `204 No Content` on success. Fires a [Guild Delete](#DOCS_TOPICS_GATEWAY/guild-delete) Gateway event.
    */
   async deleteGuild(guildId: string): Promise<void> {
-    return this.rest.delete(`/guilds/${guildId}`)
+    return await this.rest.delete(`/guilds/${guildId}`)
   }
 
   /**
    * Returns a list of guild [channel](#DOCS_RESOURCES_CHANNEL/channel-object) objects.
    */
   async getGuildChannels(guildId: string): Promise<ChannelPayload[]> {
-    return this.rest.get(`/guilds/${guildId}/channels`)
+    return await this.rest.get(`/guilds/${guildId}/channels`)
   }
 
   /**
@@ -770,7 +788,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     payload: GuildCreateChannelPayload
   ): Promise<ChannelPayload> {
-    return this.rest.post(`/guilds/${guildId}/channels`, payload)
+    return await this.rest.post(`/guilds/${guildId}/channels`, payload)
   }
 
   /**
@@ -780,7 +798,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     payload: Array<{ id: string; position: number }>
   ): Promise<void> {
-    return this.rest.patch(`/guilds/${guildId}/channels`, payload)
+    return await this.rest.patch(`/guilds/${guildId}/channels`, payload)
   }
 
   /**
@@ -790,7 +808,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     userId: string
   ): Promise<MemberPayload> {
-    return this.rest.get(`/guilds/${guildId}/members/${userId}`)
+    return await this.rest.get(`/guilds/${guildId}/members/${userId}`)
   }
 
   /**
@@ -801,11 +819,12 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     params: { limit?: number; after?: string }
   ): Promise<MemberPayload[]> {
     if (params?.limit !== undefined) {
-      if (params.limit < 1 || params.limit > 1000)
+      if (params.limit < 1 || params.limit > 1000) {
         throw new Error('Limit should be a number between 1 and 1000')
+      }
     }
 
-    return this.rest.get(`/guilds/${guildId}/members`, params)
+    return await this.rest.get(`/guilds/${guildId}/members`, params)
   }
 
   /**
@@ -820,11 +839,12 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     }
 
     if (params.limit !== undefined) {
-      if (params.limit < 1 || params.limit > 1000)
+      if (params.limit < 1 || params.limit > 1000) {
         throw new Error('Limit should be a number between 1 and 1000')
+      }
     }
 
-    return this.rest.get(`/guilds/${guildId}/members/search`, params)
+    return await this.rest.get(`/guilds/${guildId}/members/search`, params)
   }
 
   /**
@@ -835,7 +855,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     userId: string
   ): Promise<MemberPayload | undefined> {
-    return this.rest.put(`/guilds/${guildId}/members/${userId}`)
+    return await this.rest.put(`/guilds/${guildId}/members/${userId}`)
   }
 
   /**
@@ -846,7 +866,10 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     userId: string,
     payload: Partial<MemberPayload>
   ): Promise<MemberPayload> {
-    return this.rest.patch(`/guilds/${guildId}/members/${userId}`, payload)
+    return await this.rest.patch(
+      `/guilds/${guildId}/members/${userId}`,
+      payload
+    )
   }
 
   /**
@@ -856,7 +879,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     payload: { nick?: string | null }
   ): Promise<string> {
-    return this.rest.patch(`/guilds/${guildId}/members/@me/nick`, payload)
+    return await this.rest.patch(`/guilds/${guildId}/members/@me/nick`, payload)
   }
 
   /**
@@ -867,7 +890,9 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     userId: string,
     roleId: string
   ): Promise<void> {
-    return this.rest.put(`/guilds/${guildId}/members/${userId}/roles/${roleId}`)
+    return await this.rest.put(
+      `/guilds/${guildId}/members/${userId}/roles/${roleId}`
+    )
   }
 
   /**
@@ -878,7 +903,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     userId: string,
     roleId: string
   ): Promise<void> {
-    return this.rest.delete(
+    return await this.rest.delete(
       `/guilds/${guildId}/members/${userId}/roles/${roleId}`
     )
   }
@@ -887,21 +912,21 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
    * Remove a member from a guild. Requires `KICK_MEMBERS` permission. Returns a 204 empty response on success. Fires a [Guild Member Remove](#DOCS_TOPICS_GATEWAY/guild-member-remove) Gateway event.
    */
   async removeGuildMember(guildId: string, userId: string): Promise<void> {
-    return this.rest.delete(`/guilds/${guildId}/members/${userId}`)
+    return await this.rest.delete(`/guilds/${guildId}/members/${userId}`)
   }
 
   /**
    * Returns a list of [ban](#DOCS_RESOURCES_GUILD/ban-object) objects for the users banned from this guild. Requires the `BAN_MEMBERS` permission.
    */
   async getGuildBans(guildId: string): Promise<GuildBanPayload[]> {
-    return this.rest.get(`/guilds/${guildId}/bans`)
+    return await this.rest.get(`/guilds/${guildId}/bans`)
   }
 
   /**
    * Returns a [ban](#DOCS_RESOURCES_GUILD/ban-object) object for the given user or a 404 not found if the ban cannot be found. Requires the `BAN_MEMBERS` permission.
    */
   async getGuildBan(guildId: string, userId: string): Promise<GuildBanPayload> {
-    return this.rest.get(`/guilds/${guildId}/bans/${userId}`)
+    return await this.rest.get(`/guilds/${guildId}/bans/${userId}`)
   }
 
   /**
@@ -912,21 +937,21 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     userId: string,
     payload: GuildBanAddPayload
   ): Promise<void> {
-    return this.rest.put(`/guilds/${guildId}/bans/${userId}`, payload)
+    return await this.rest.put(`/guilds/${guildId}/bans/${userId}`, payload)
   }
 
   /**
    * Remove the ban for a user. Requires the `BAN_MEMBERS` permissions. Returns a 204 empty response on success. Fires a [Guild Ban Remove](#DOCS_TOPICS_GATEWAY/guild-ban-remove) Gateway event.
    */
   async removeGuildBan(guildId: string, userId: string): Promise<void> {
-    return this.rest.delete(`/guilds/${guildId}/bans/${userId}`)
+    return await this.rest.delete(`/guilds/${guildId}/bans/${userId}`)
   }
 
   /**
    * Returns a list of [role](#DOCS_TOPICS_PERMISSIONS/role-object) objects for the guild.
    */
   async getGuildRoles(guildId: string): Promise<RolePayload[]> {
-    return this.rest.get(`/guilds/${guildId}/roles`)
+    return await this.rest.get(`/guilds/${guildId}/roles`)
   }
 
   /**
@@ -936,7 +961,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     payload: GuildCreateRolePayload
   ): Promise<RolePayload> {
-    return this.rest.post(`/guilds/${guildId}/roles`, payload)
+    return await this.rest.post(`/guilds/${guildId}/roles`, payload)
   }
 
   /**
@@ -947,7 +972,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     payload: Array<{ id: string; position: number }>
   ): Promise<RolePayload[]> {
-    return this.rest.patch(`/guilds/${guildId}/roles`, payload)
+    return await this.rest.patch(`/guilds/${guildId}/roles`, payload)
   }
 
   /**
@@ -958,14 +983,14 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     roleId: string,
     payload: RoleModifyPayload
   ): Promise<RolePayload> {
-    return this.rest.patch(`/guilds/${guildId}/roles/${roleId}`, payload)
+    return await this.rest.patch(`/guilds/${guildId}/roles/${roleId}`, payload)
   }
 
   /**
    * Delete a guild role. Requires the `MANAGE_ROLES` permission. Returns a 204 empty response on success. Fires a [Guild Role Delete](#DOCS_TOPICS_GATEWAY/guild-role-delete) Gateway event.
    */
   async deleteGuildRole(guildId: string, roleId: string): Promise<void> {
-    return this.rest.delete(`/guilds/${guildId}/roles/${roleId}`)
+    return await this.rest.delete(`/guilds/${guildId}/roles/${roleId}`)
   }
 
   /**
@@ -973,7 +998,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
    * By default, prune will not remove users with roles. You can optionally include specific roles in your prune by providing the `include_roles` parameter. Any inactive user that has a subset of the provided role(s) will be counted in the prune and users with additional roles will not.
    */
   async getGuildPruneCount(guildId: string): Promise<GuildPruneCountPayload> {
-    return this.rest.get(`/guilds/${guildId}/prune`)
+    return await this.rest.get(`/guilds/${guildId}/prune`)
   }
 
   /**
@@ -984,21 +1009,21 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     payload: GuildBeginPrunePayload
   ): Promise<void> {
-    return this.rest.post(`/guilds/${guildId}/prune`, payload)
+    return await this.rest.post(`/guilds/${guildId}/prune`, payload)
   }
 
   /**
    * Returns a list of [voice region](#DOCS_RESOURCES_VOICE/voice-region-object) objects for the guild. Unlike the similar `/voice` route, this returns VIP servers when the guild is VIP-enabled.
    */
   async getGuildVoiceRegions(guildId: string): Promise<VoiceRegion[]> {
-    return this.rest.get(`/guilds/${guildId}/regions`)
+    return await this.rest.get(`/guilds/${guildId}/regions`)
   }
 
   /**
    * Returns a list of [invite](#DOCS_RESOURCES_INVITE/invite-object) objects (with [invite metadata](#DOCS_RESOURCES_INVITE/invite-metadata-object)) for the guild. Requires the `MANAGE_GUILD` permission.
    */
   async getGuildInvites(guildId: string): Promise<InviteWithMetadataPayload[]> {
-    return this.rest.get(`/guilds/${guildId}/invites`)
+    return await this.rest.get(`/guilds/${guildId}/invites`)
   }
 
   /**
@@ -1007,7 +1032,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
   async getGuildIntegrations(
     guildId: string
   ): Promise<GuildIntegrationPayload[]> {
-    return this.rest.get(`/guilds/${guildId}/integrations`)
+    return await this.rest.get(`/guilds/${guildId}/integrations`)
   }
 
   /**
@@ -1017,14 +1042,16 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     integrationId: string
   ): Promise<void> {
-    return this.rest.delete(`/guilds/${guildId}/integrations/${integrationId}`)
+    return await this.rest.delete(
+      `/guilds/${guildId}/integrations/${integrationId}`
+    )
   }
 
   /**
    * Returns a [guild widget](#DOCS_RESOURCES_GUILD/guild-widget-object) object. Requires the `MANAGE_GUILD` permission.
    */
   async getGuildWidgetSettings(guildId: string): Promise<GuildWidgetPayload> {
-    return this.rest.get(`/guilds/${guildId}/widget`)
+    return await this.rest.get(`/guilds/${guildId}/widget`)
   }
 
   /**
@@ -1034,15 +1061,15 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     payload: Partial<GuildWidgetPayload>
   ): Promise<GuildWidgetPayload> {
-    return this.rest.patch(`/guilds/${guildId}/widget`, payload)
+    return await this.rest.patch(`/guilds/${guildId}/widget`, payload)
   }
 
   // It's type is not specified in docs, so I'll use any.
   /**
    * Returns the widget for the guild.
    */
-  async getGuildWidget(guildId: string): Promise<any> {
-    return this.rest.get(`/guilds/${guildId}/widget.json`)
+  async getGuildWidget(guildId: string): Promise<unknown> {
+    return await this.rest.get(`/guilds/${guildId}/widget.json`)
   }
 
   /**
@@ -1051,7 +1078,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
   async getGuildVanityURL(
     guildId: string
   ): Promise<Partial<InviteWithMetadataPayload>> {
-    return this.rest.get(`/guilds/${guildId}/vanity-url`)
+    return await this.rest.get(`/guilds/${guildId}/vanity-url`)
   }
 
   /**
@@ -1065,21 +1092,21 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
    * Returns an [invite](#DOCS_RESOURCES_INVITE/invite-object) object for the given code.
    */
   async getInvite(inviteCode: string): Promise<InvitePayload> {
-    return this.rest.get(`/invites/${inviteCode}`)
+    return await this.rest.get(`/invites/${inviteCode}`)
   }
 
   /**
    * Delete an invite. Requires the `MANAGE_CHANNELS` permission on the channel this invite belongs to, or `MANAGE_GUILD` to remove any invite across the guild. Returns an [invite](#DOCS_RESOURCES_INVITE/invite-object) object on success. Fires a [Invite Delete](#DOCS_TOPICS_GATEWAY/invite-delete) Gateway event.
    */
   async deleteInvite(inviteCode: string): Promise<void> {
-    return this.rest.delete(`/invites/${inviteCode}`)
+    return await this.rest.delete(`/invites/${inviteCode}`)
   }
 
   /**
    * Returns a [template](#DOCS_RESOURCES_TEMPLATE/template-object) object for the given code.
    */
   async getTemplate(templateCode: string): Promise<TemplatePayload> {
-    return this.rest.get(`/guilds/templates/${templateCode}`)
+    return await this.rest.get(`/guilds/templates/${templateCode}`)
   }
 
   /**
@@ -1089,14 +1116,14 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     templateCode: string,
     payload: Partial<GuildPayload>
   ): Promise<GuildPayload> {
-    return this.rest.post(`/guilds/templates/${templateCode}`, payload)
+    return await this.rest.post(`/guilds/templates/${templateCode}`, payload)
   }
 
   /**
    * Returns an array of [template](#DOCS_RESOURCES_TEMPLATE/template-object) objects. Requires the `MANAGE_GUILD` permission.
    */
   async getGuildTemplates(guildId: string): Promise<TemplatePayload[]> {
-    return this.rest.get(`/guilds/${guildId}/templates`)
+    return await this.rest.get(`/guilds/${guildId}/templates`)
   }
 
   /**
@@ -1106,7 +1133,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     payload: { name: string; description?: string | null }
   ): Promise<TemplatePayload> {
-    return this.rest.post(`/guilds/${guildId}/templates`, payload)
+    return await this.rest.post(`/guilds/${guildId}/templates`, payload)
   }
 
   /**
@@ -1116,7 +1143,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     templateCode: string
   ): Promise<TemplatePayload> {
-    return this.rest.put(`/guilds/${guildId}/templates/${templateCode}`)
+    return await this.rest.put(`/guilds/${guildId}/templates/${templateCode}`)
   }
 
   /**
@@ -1127,7 +1154,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     templateCode: string,
     payload: Partial<TemplatePayload>
   ): Promise<TemplatePayload> {
-    return this.rest.patch(
+    return await this.rest.patch(
       `/guilds/${guildId}/templates/${templateCode}`,
       payload
     )
@@ -1140,21 +1167,23 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildId: string,
     templateCode: string
   ): Promise<void> {
-    return this.rest.delete(`/guilds/${guildId}/templates/${templateCode}`)
+    return await this.rest.delete(
+      `/guilds/${guildId}/templates/${templateCode}`
+    )
   }
 
   /**
    * Returns the [user](#DOCS_RESOURCES_USER/user-object) object of the requester's account. For OAuth2, this requires the `identify` scope, which will return the object _without_ an email, and optionally the `email` scope, which returns the object _with_ an email.
    */
   async getCurrentUser(): Promise<UserPayload> {
-    return this.rest.get(`/users/@me`)
+    return await this.rest.get(`/users/@me`)
   }
 
   /**
    * Returns a [user](#DOCS_RESOURCES_USER/user-object) object for a given user ID.
    */
   async getUser(userId: string): Promise<UserPayload> {
-    return this.rest.get(`/users/${userId}`)
+    return await this.rest.get(`/users/${userId}`)
   }
 
   /**
@@ -1164,35 +1193,35 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     username?: string
     avatar?: string | null
   }): Promise<UserPayload> {
-    return this.rest.patch(`/users/@me`, payload)
+    return await this.rest.patch(`/users/@me`, payload)
   }
 
   /**
    * Returns a list of partial [guild](#DOCS_RESOURCES_GUILD/guild-object) objects the current user is a member of. Requires the `guilds` OAuth2 scope.
    */
   async getCurrentUserGuilds(): Promise<Partial<GuildPayload>> {
-    return this.rest.get(`/users/@me/guilds`)
+    return await this.rest.get(`/users/@me/guilds`)
   }
 
   /**
    * Leave a guild. Returns a 204 empty response on success.
    */
   async leaveGuild(guildId: string): Promise<void> {
-    return this.rest.delete(`/users/@me/guilds/${guildId}`)
+    return await this.rest.delete(`/users/@me/guilds/${guildId}`)
   }
 
   /**
    * Returns a list of [DM channel](#DOCS_RESOURCES_CHANNEL/channel-object) objects. For bots, this is no longer a supported method of getting recent DMs, and will return an empty array.
    */
   async getUserDMs(): Promise<ChannelPayload[]> {
-    return this.rest.get(`/users/@me/channels`)
+    return await this.rest.get(`/users/@me/channels`)
   }
 
   /**
    * Create a new DM channel with a user. Returns a [DM channel](#DOCS_RESOURCES_CHANNEL/channel-object) object.
    */
   async createDM(payload: { recipient_id: string }): Promise<ChannelPayload> {
-    return this.rest.post(`/users/@me/channels`, payload)
+    return await this.rest.post(`/users/@me/channels`, payload)
   }
 
   /**
@@ -1202,21 +1231,21 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     access_tokens: string[]
     nicks: Dict<string>
   }): Promise<ChannelPayload> {
-    return this.rest.post(`/users/@me/channels`, payload)
+    return await this.rest.post(`/users/@me/channels`, payload)
   }
 
   /**
    * Returns a list of [connection](#DOCS_RESOURCES_USER/connection-object) objects. Requires the `connections` OAuth2 scope.
    */
   async getUserConnections(): Promise<unknown[]> {
-    return this.rest.get(`/users/@me/connections`)
+    return await this.rest.get(`/users/@me/connections`)
   }
 
   /**
    * Returns an array of [voice region](#DOCS_RESOURCES_VOICE/voice-region-object) objects that can be used when creating servers.
    */
   async listVoiceRegions(): Promise<VoiceRegion[]> {
-    return this.rest.get(`/voice/regions`)
+    return await this.rest.get(`/voice/regions`)
   }
 
   /**
@@ -1227,28 +1256,28 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     channelId: string,
     payload: { name?: string; avatar?: string }
   ): Promise<WebhookPayload> {
-    return this.rest.post(`/channels/${channelId}/webhooks`, payload)
+    return await this.rest.post(`/channels/${channelId}/webhooks`, payload)
   }
 
   /**
    * Returns a list of channel [webhook](#DOCS_RESOURCES_WEBHOOK/webhook-object) objects. Requires the `MANAGE_WEBHOOKS` permission.
    */
   async getChannelWebhooks(channelId: string): Promise<WebhookPayload[]> {
-    return this.rest.get(`/channels/${channelId}/webhooks`)
+    return await this.rest.get(`/channels/${channelId}/webhooks`)
   }
 
   /**
    * Returns a list of guild [webhook](#DOCS_RESOURCES_WEBHOOK/webhook-object) objects. Requires the `MANAGE_WEBHOOKS` permission.
    */
   async getGuildWebhooks(guildId: string): Promise<WebhookPayload[]> {
-    return this.rest.get(`/guilds/${guildId}/webhooks`)
+    return await this.rest.get(`/guilds/${guildId}/webhooks`)
   }
 
   /**
    * Returns the new [webhook](#DOCS_RESOURCES_WEBHOOK/webhook-object) object for the given id.
    */
   async getWebhook(webhookId: string): Promise<WebhookPayload[]> {
-    return this.rest.get(`/webhooks/${webhookId}`)
+    return await this.rest.get(`/webhooks/${webhookId}`)
   }
 
   /**
@@ -1258,7 +1287,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     webhookId: string,
     webhookToken: string
   ): Promise<WebhookPayload> {
-    return this.rest.get(`/webhooks/${webhookId}/${webhookToken}`)
+    return await this.rest.get(`/webhooks/${webhookId}/${webhookToken}`)
   }
 
   /**
@@ -1268,7 +1297,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     webhookId: string,
     payload: { name?: string; avatar?: string | null }
   ): Promise<WebhookPayload> {
-    return this.rest.patch(`/webhooks/${webhookId}`, payload)
+    return await this.rest.patch(`/webhooks/${webhookId}`, payload)
   }
 
   /**
@@ -1279,14 +1308,17 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     webhookToken: string,
     payload: { name?: string; avatar?: string | null }
   ): Promise<WebhookPayload> {
-    return this.rest.patch(`/webhooks/${webhookId}/${webhookToken}`, payload)
+    return await this.rest.patch(
+      `/webhooks/${webhookId}/${webhookToken}`,
+      payload
+    )
   }
 
   /**
    * Delete a webhook permanently. Requires the `MANAGE_WEBHOOKS` permission. Returns a 204 NO CONTENT response on success.
    */
   async deleteWebhook(webhookId: string): Promise<void> {
-    return this.rest.delete(`/webhooks/${webhookId}`)
+    return await this.rest.delete(`/webhooks/${webhookId}`)
   }
 
   /**
@@ -1296,7 +1328,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     webhookId: string,
     webhookToken: string
   ): Promise<void> {
-    return this.rest.delete(`/webhooks/${webhookId}/${webhookToken}`)
+    return await this.rest.delete(`/webhooks/${webhookId}/${webhookToken}`)
   }
 
   async executeWebhook(
@@ -1304,7 +1336,10 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     webhookToken: string,
     payload: CreateWebhookMessagePayload
   ): Promise<MessagePayload> {
-    return this.rest.post(`/webhooks/${webhookId}/${webhookToken}`, payload)
+    return await this.rest.post(
+      `/webhooks/${webhookId}/${webhookToken}`,
+      payload
+    )
   }
 
   async executeSlackCompatibleWebhook(
@@ -1312,7 +1347,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     webhookToken: string,
     payload: unknown
   ): Promise<MessagePayload> {
-    return this.rest.post(
+    return await this.rest.post(
       `/webhooks/${webhookId}/${webhookToken}/slack`,
       payload
     )
@@ -1323,7 +1358,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     webhookToken: string,
     payload: unknown
   ): Promise<MessagePayload> {
-    return this.rest.post(
+    return await this.rest.post(
       `/webhooks/${webhookId}/${webhookToken}/github`,
       payload
     )
@@ -1338,25 +1373,25 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     messageId: string,
     payload: CreateWebhookMessageBasePayload
   ): Promise<MessagePayload> {
-    return this.rest.patch(
+    return await this.rest.patch(
       `/webhooks/${webhookId}/${webhookToken}/messages/${messageId}`,
       payload
     )
   }
 
   async getGateway(): Promise<{ url: string }> {
-    return this.rest.get(`/gateway`)
+    return await this.rest.get(`/gateway`)
   }
 
   async getGatewayBot(): Promise<GatewayBotPayload> {
-    return this.rest.get(`/gateway/bot`)
+    return await this.rest.get(`/gateway/bot`)
   }
 
   /**
    * Returns the bot's OAuth2 [application object](#DOCS_TOPICS_OAUTH2/application-object) without `flags`.
    */
   async getCurrentApplicationInformation(): Promise<ApplicationPayload> {
-    return this.rest.get(`/oauth2/applications/@me`)
+    return await this.rest.get(`/oauth2/applications/@me`)
   }
 
   // We do not include types for this object.
@@ -1364,7 +1399,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
    * Returns info about the current authorization. Requires authentication with a bearer token.
    */
   async getCurrentAuthorizationInformation(): Promise<unknown> {
-    return this.rest.get(`/oauth2/@me`)
+    return await this.rest.get(`/oauth2/@me`)
   }
 
   /**
@@ -1375,7 +1410,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     messageId: string,
     payload: CreateThreadPayload
   ): Promise<ThreadChannelPayload> {
-    return this.rest.post(
+    return await this.rest.post(
       `/channels/${channelId}/messages/${messageId}/threads`,
       payload
     )
@@ -1404,7 +1439,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     channelId: string,
     payload: CreateThreadPayload
   ): Promise<ThreadChannelPayload> {
-    return this.rest.post(`/channels/${channelId}/threads`, payload)
+    return await this.rest.post(`/channels/${channelId}/threads`, payload)
   }
 
   // Exist for backwards compatibility
@@ -1422,28 +1457,33 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
    * Adds the current user to a thread. Returns a 204 empty response on success. Also requires the thread is not archived. Fires a Thread Members Update Gateway event.
    */
   async joinThread(channelId: string): Promise<undefined> {
-    return this.rest.post(`/channels/${channelId}/thread-members/@me`, {})
+    return await this.rest.post(`/channels/${channelId}/thread-members/@me`, {})
   }
 
   /**
    * Adds another user to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived. Returns a 204 empty response on success. Fires a Thread Members Update Gateway event.
    */
   async addUserToThread(channelId: string, userId: string): Promise<undefined> {
-    return this.rest.post(`/channels/${channelId}/thread-members/${userId}`, {})
+    return await this.rest.post(
+      `/channels/${channelId}/thread-members/${userId}`,
+      {}
+    )
   }
 
   /**
    * Removes the current user from a thread. Returns a 204 empty response on success. Fires a Thread Members Update Gateway event.
    */
   async leaveThread(channelId: string): Promise<void> {
-    return this.rest.delete(`/channels/${channelId}/thread-members/@me`)
+    return await this.rest.delete(`/channels/${channelId}/thread-members/@me`)
   }
 
   /**
    * Removes another user from a thread. Requires the MANAGE_THREADS permission or that you are the creator of the thread. Also requires the thread is not archived. Returns a 204 empty response on success. Fires a Thread Members Update Gateway event.
    */
   async removeUserFromThread(channelId: string, userId: string): Promise<void> {
-    return this.rest.delete(`/channels/${channelId}/thread-members/${userId}`)
+    return await this.rest.delete(
+      `/channels/${channelId}/thread-members/${userId}`
+    )
   }
 
   /**
@@ -1458,7 +1498,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     has_more: boolean
   }> {
     const qs = queryString(params)
-    return this.rest.get(
+    return await this.rest.get(
       `/channels/${channelId}/threads/archived/public${
         qs.length !== 0 ? `?${qs}` : ''
       }`
@@ -1477,7 +1517,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     has_more: boolean
   }> {
     const qs = queryString(params)
-    return this.rest.get(
+    return await this.rest.get(
       `/channels/${channelId}/threads/archived/private${
         qs.length !== 0 ? `?${qs}` : ''
       }`
@@ -1496,7 +1536,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     has_more: boolean
   }> {
     const qs = queryString(params)
-    return this.rest.get(
+    return await this.rest.get(
       `/channels/${channelId}/users/@me/threads/archived/private${
         qs.length !== 0 ? `?${qs}` : ''
       }`
@@ -1513,29 +1553,29 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     has_more: boolean
   }> {
     const qs = queryString(params)
-    return this.rest.get(
+    return await this.rest.get(
       `/channels/${channelId}/threads/active${qs.length !== 0 ? `?${qs}` : ''}`
     )
   }
 
   /** Returns array of thread members objects that are members of the thread. */
   async getThreadMembers(channelId: string): Promise<ThreadMemberPayload[]> {
-    return this.rest.get(`/channels/${channelId}/thread-members`)
+    return await this.rest.get(`/channels/${channelId}/thread-members`)
   }
 
   /** Returns a sticker object for the given sticker ID. */
   async getSticker(stickerID: string): Promise<MessageStickerPayload> {
-    return this.rest.get(`/stickers/${stickerID}`)
+    return await this.rest.get(`/stickers/${stickerID}`)
   }
 
   /** Returns the list of sticker packs available to Nitro subscribers. */
   async getStickerPacks(): Promise<MessageStickerPackPayload[]> {
-    return this.rest.get(`/sticker-packs`).then((e) => e.sticker_packs)
+    return await this.rest.get(`/sticker-packs`).then((e) => e.sticker_packs)
   }
 
   /** Returns an array of sticker objects for the given guild. Includes user fields if the bot has the MANAGE_EMOJIS_AND_STICKERS permission. */
   async getGuildStickers(guildID: string): Promise<MessageStickerPayload[]> {
-    return this.rest.get(`/guilds/${guildID}/stickers`)
+    return await this.rest.get(`/guilds/${guildID}/stickers`)
   }
 
   /** Returns a sticker object for the given guild and sticker IDs. Includes the user field if the bot has the MANAGE_EMOJIS_AND_STICKERS permission. */
@@ -1543,7 +1583,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     guildID: string,
     stickerID: string
   ): Promise<MessageStickerPayload> {
-    return this.rest.get(`/guilds/${guildID}/stickers/${stickerID}`)
+    return await this.rest.get(`/guilds/${guildID}/stickers/${stickerID}`)
   }
 
   /** Create a new sticker for the guild. Send a multipart/form-data body. Requires the MANAGE_EMOJIS_AND_STICKERS permission. Returns the new sticker object on success. */
@@ -1562,7 +1602,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
         : options.file
     )
 
-    return this.rest.request('post', `/guilds/${guildID}/stickers`, {
+    return await this.rest.request('post', `/guilds/${guildID}/stickers`, {
       data,
       reason: options.reason
     })
@@ -1574,7 +1614,7 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
     stickerID: string,
     options: Partial<ModifyGuildStickerOptions>
   ): Promise<MessageStickerPayload> {
-    return this.rest.request(
+    return await this.rest.request(
       'post',
       `/guilds/${guildID}/stickers/${stickerID}`,
       {
@@ -1589,12 +1629,12 @@ The `emoji` must be [URL Encoded](https://en.wikipedia.org/wiki/Percent-encoding
   }
 
   /** Delete the given sticker. Requires the MANAGE_EMOJIS_AND_STICKERS permission. Returns 204 No Content on success. */
-  async deleteGuildSticker(
+  async deleteGuildSticker<T = boolean>(
     guildID: string,
     stickerID: string,
     reason?: string
-  ): Promise<void> {
-    return this.rest.request(
+  ): Promise<T> {
+    return await this.rest.request<T>(
       'delete',
       `/guilds/${guildID}/stickers/${stickerID}`,
       { reason }

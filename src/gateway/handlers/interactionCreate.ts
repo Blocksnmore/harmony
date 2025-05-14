@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { Guild } from '../../structures/guild.ts'
 import { Member } from '../../structures/member.ts'
 import {
-  InteractionApplicationCommandResolved,
+  type InteractionApplicationCommandResolved,
   ApplicationCommandInteraction
 } from '../../structures/applicationCommand.ts'
 import { MessageComponentInteraction } from '../../structures/messageComponents.ts'
@@ -10,25 +9,25 @@ import {
   Interaction,
   InteractionChannel
 } from '../../structures/interactions.ts'
-import { GuildTextBasedChannel } from '../../structures/guildTextChannel.ts'
+import type { GuildTextBasedChannel } from '../../structures/guildTextChannel.ts'
 import {
-  InteractionPayload,
+  type InteractionPayload,
   InteractionType
 } from '../../types/interactions.ts'
-import { UserPayload } from '../../types/user.ts'
+import type { UserPayload } from '../../types/user.ts'
 import { Permissions } from '../../utils/permissions.ts'
 import type { Gateway, GatewayEventHandler } from '../mod.ts'
 import { User } from '../../structures/user.ts'
 import { Role } from '../../structures/role.ts'
-import { RolePayload } from '../../types/role.ts'
-import {
+import type { RolePayload } from '../../types/role.ts'
+import type {
   InteractionApplicationCommandData,
   InteractionChannelPayload
 } from '../../types/applicationCommand.ts'
 import { Message } from '../../structures/message.ts'
-import { TextChannel } from '../../structures/textChannel.ts'
-import { MessagePayload } from '../../types/channel.ts'
-import { GuildPayload, MemberPayload } from '../../types/guild.ts'
+import type { TextChannel } from '../../structures/textChannel.ts'
+import type { MessagePayload } from '../../types/channel.ts'
+import type { GuildPayload, MemberPayload } from '../../types/guild.ts'
 import { AutocompleteInteraction } from '../../structures/autocompleteInteraction.ts'
 import { ModalSubmitInteraction } from '../../structures/modalSubmitInteraction.ts'
 
@@ -46,7 +45,6 @@ export const interactionCreate: GatewayEventHandler = async (
     d.guild_id === undefined
       ? undefined
       : (await gateway.client.guilds.get(d.guild_id)) ??
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         new Guild(gateway.client, {
           unavailable: true,
           id: d.guild_id
@@ -61,7 +59,6 @@ export const interactionCreate: GatewayEventHandler = async (
           gateway.client,
           d.member!,
           new User(gateway.client, d.member.user),
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           guild!,
           new Permissions(d.member.permissions)
         )

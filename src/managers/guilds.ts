@@ -66,7 +66,6 @@ export class GuildManager extends BaseManager<GuildPayload, Guild> {
    * @param options Options for creating a guild
    */
   async create(options: GuildCreateOptions): Promise<Guild> {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (options.icon !== undefined && !options.icon.startsWith('data:')) {
       options.icon = await fetchAuto(options.icon)
     }
@@ -185,7 +184,6 @@ export class GuildManager extends BaseManager<GuildPayload, Guild> {
     if (
       options.icon !== undefined &&
       options.icon !== null &&
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       !options.icon.startsWith('data:')
     ) {
       options.icon = await fetchAuto(options.icon)
@@ -193,7 +191,6 @@ export class GuildManager extends BaseManager<GuildPayload, Guild> {
     if (
       options.splash !== undefined &&
       options.splash !== null &&
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       !options.splash.startsWith('data:')
     ) {
       options.splash = await fetchAuto(options.splash)
@@ -201,7 +198,6 @@ export class GuildManager extends BaseManager<GuildPayload, Guild> {
     if (
       options.banner !== undefined &&
       options.banner !== null &&
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       !options.banner.startsWith('data:')
     ) {
       options.banner = await fetchAuto(options.banner)

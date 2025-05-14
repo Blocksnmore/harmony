@@ -1,4 +1,4 @@
-import {
+import type {
   ApplicationCommandChoice,
   InteractionApplicationCommandOption
 } from '../types/applicationCommand.ts'
