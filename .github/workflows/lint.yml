@@ -22,5 +22,8 @@ jobs:
         with:
           deno-version: v2.x
 
+      - name: Install dependencies
+        run: deno install
+
       - name: Lint
         run: deno lint -c deno.json
